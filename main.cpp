@@ -1,68 +1,75 @@
 #include <SFML/Graphics.hpp>
-#include <ctime>
-#include <chrono>
-#include <iomanip>
-#include <string>
-#include "ColorEscape.hpp"
 #include "sfmlbutton.hpp"
 
-void log(std::string log)
-{
-    auto now = std::chrono::system_clock::now();
-    std::time_t t = std::chrono::system_clock::to_time_t(now);
-    std::tm tm = *std::localtime(&t);
-    ce::setForegroundColor(50);
-    std::clog << std::put_time(&tm, "[%y:%m:%d]%H:%M:%S");
-    ce::setForegroundColor(190);
-    std::clog << " : " << log << std::endl;
-    ce::reset();
-}
+#include "inc/system.hpp"
 
-void err(void)
-{
-    auto now = std::chrono::system_clock::now();
-    std::time_t t = std::chrono::system_clock::to_time_t(now);
-    std::tm tm = *std::localtime(&t);
-    ce::setForegroundColor(50);
-    std::clog << std::put_time(&tm, "[%y:%m:%d]%H:%M:%S");
-    ce::setForegroundColor(160);
-    std::clog << ": " << std::endl;
-}
+void mainMenuUI(sf::RenderWindow& window);
+bool debugMode = false;
 
 int main()
 {
     enable_vtp();
-    log("Game Started");
-    // Create the main window
-    sf::RenderWindow app(sf::VideoMode(800, 600), "SFML window");
+    debugMode = true;
+    if(debugMode)log("Game Started");
 
-    // Load a sprite to display
-    sf::Texture texture;
-    if (!texture.loadFromFile("cb.bmp"))
-        return EXIT_FAILURE;
-    sf::Sprite sprite(texture);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Snake Frenzy", sf::Style::Titlebar | sf::Style::Close);
 
-	// Start the game loop
-    while (app.isOpen())
+    mainMenuUI(window);
+
+    return EXIT_SUCCESS;
+}
+
+void mainMenuUI(sf::RenderWindow& window)
+{
+    sf::Font lemonMilkFNT;
+    lemonMilkFNT.loadFromFile("LEMONMILK-Regular.otf");
+
+    RectButton playBTN(lemonMilkFNT, true, sf::Vector2f(50.f, 50.f));
+    playBTN.setLabelColor(sf::Color::White, sf::Color::Green, sf::Color::Green);
+    playBTN.setButtonColor(sf::Color::Transparent);
+    playBTN.setButtonLabel(50.f, "Play");
+
+    RectButton exitBTN(lemonMilkFNT, true, sf::Vector2f(50.f, 150.f));
+    exitBTN.setLabelColor(sf::Color::White, sf::Color::Red, sf::Color::Red);
+    exitBTN.setButtonColor(sf::Color::Transparent);
+    exitBTN.setButtonLabel(50.f, "Exit");
+
+    sf::Texture backgroundTEX;
+    backgroundTEX.loadFromFile("background.png");
+
+    sf::Sprite backgroundSPR;
+    backgroundSPR.setTexture(backgroundTEX);
+
+    // Start the game loop
+    while (window.isOpen())
     {
         // Process events
         sf::Event event;
-        while (app.pollEvent(event))
+        while (window.pollEvent(event))
         {
-            // Close window : exit
+            playBTN.getButtonStatus(window, event);
+            exitBTN.getButtonStatus(window, event);
+
             if (event.type == sf::Event::Closed)
-                app.close();
+            {
+                window.close();
+            }
+            if (exitBTN.isPressed)
+            {
+                window.close();
+            }
         }
 
         // Clear screen
-        app.clear();
+        window.clear();
 
         // Draw the sprite
-        app.draw(sprite);
+        window.draw(backgroundSPR);
+
+        playBTN.draw(window);
+        exitBTN.draw(window);
 
         // Update the window
-        app.display();
+        window.display();
     }
-
-    return EXIT_SUCCESS;
 }
