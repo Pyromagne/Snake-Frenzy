@@ -15,7 +15,7 @@ void log(std::string log, bool debugMode = false)
     }
 }
 
-void err(bool debugMode = false)
+void err(std::string err, bool debugMode = false)
 {
     if(debugMode)
     {
@@ -23,8 +23,9 @@ void err(bool debugMode = false)
         std::time_t t = std::chrono::system_clock::to_time_t(now);
         std::tm tm = *std::localtime(&t);
         ce::setForegroundColor(50);
-        std::clog << std::put_time(&tm, "[%y:%m:%d]%H:%M:%S");
+        std::cerr << std::put_time(&tm, "[%y:%m:%d]%H:%M:%S");
         ce::setForegroundColor(160);
-        std::clog << ": " << std::endl;
+        std::cerr << " : " << err << std::endl;
+        ce::reset();
     }
 }

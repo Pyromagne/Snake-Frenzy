@@ -3,15 +3,15 @@
 
 void mainMenuUI(sf::RenderWindow& window)
 {
-    sf::Font lemonMilkFNT;
-    lemonMilkFNT.loadFromFile("LEMONMILK-Regular.otf");
+    sf::Font simpleSquareFNT;
+    simpleSquareFNT.loadFromFile("ST-SimpleSquare.otf");
 
-    RectButton playBTN(lemonMilkFNT, true, sf::Vector2f(50.f, 50.f));
+    RectButton playBTN(simpleSquareFNT, true, sf::Vector2f(50.f, 50.f));
     playBTN.setLabelColor(sf::Color::White, sf::Color::Green, sf::Color::Green);
     playBTN.setButtonColor(sf::Color::Transparent);
     playBTN.setButtonLabel(50.f, "Play");
 
-    RectButton exitBTN(lemonMilkFNT, true, sf::Vector2f(50.f, 150.f));
+    RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(50.f, 150.f));
     exitBTN.setLabelColor(sf::Color::White, sf::Color::Red, sf::Color::Red);
     exitBTN.setButtonColor(sf::Color::Transparent);
     exitBTN.setButtonLabel(50.f, "Exit");
@@ -68,9 +68,16 @@ void mainMenuUI(sf::RenderWindow& window)
 
 void gameMenuUI(sf::RenderWindow& window)
 {
-    SnakeClass snake;
-    snake.skin.loadFromFile("snakeSkin.png");
-    
+    SnakeClass snake(100,50);
+    snake.headSkin.loadFromFile("snakeHead.png");
+    snake.bodySkin.loadFromFile("snakeSkin.png");
+
+    sf::Texture backgroundTEX;
+    backgroundTEX.loadFromFile("background.png");
+
+    sf::Sprite backgroundSPR;
+    backgroundSPR.setTexture(backgroundTEX);
+
     // Start the game loop
     while (window.isOpen())
     {
@@ -99,7 +106,7 @@ void gameMenuUI(sf::RenderWindow& window)
         window.clear();
 
         // Draw the sprite
-        window.draw(snake.head.node);
+        window.draw(backgroundSPR);
 
         snake.drawSnake(window);
 

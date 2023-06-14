@@ -9,18 +9,23 @@ struct Snake
     sf::RectangleShape node = sf::RectangleShape(sf::Vector2f(25.f,25.f));
     sf::Vector2f* nextNodes;
     sf::Vector2f prevNodes;
+
+    Snake();
 };
 
 class SnakeClass
 {
     public:
-        int snakeSize = 150;
+        int snakeSize = 10;
         Snake head;
         Snake* body;
         int lastMove = 0;
         sf::Clock updatePositionCLK;
-        sf::Texture skin;
+        sf::Texture headSkin;
+        sf::Texture bodySkin;
         SnakeClass();
+        SnakeClass(unsigned int maxSnakeSize);
+        SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize);
         ~SnakeClass();
 
         void drawSnake(sf::RenderWindow& window);

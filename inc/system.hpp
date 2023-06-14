@@ -10,7 +10,7 @@
 extern bool debugMode;
 
 void log(std::string log, bool debugMode);
-void err(bool debugMode);
+void err(std::string err, bool debugMode);
 
 
 #endif // SYSTEM_HPP_INCLUDED
