@@ -3,6 +3,7 @@
 
 void mainMenuUI(sf::RenderWindow& window)
 {
+    log("Initializing GUI",debugMode);
     sf::Font simpleSquareFNT;
     simpleSquareFNT.loadFromFile("ST-SimpleSquare.otf");
 
@@ -42,14 +43,10 @@ void mainMenuUI(sf::RenderWindow& window)
             }
             if (playBTN.isPressed)
             {
-                gameMenuUI(window);
+                gameMenuUI(window, true);
             }
 
-            //snake.dpad();
-
         }
-
-        //snake.updatePosition(150.f);
 
         // Clear screen
         window.clear();
@@ -59,59 +56,83 @@ void mainMenuUI(sf::RenderWindow& window)
 
         playBTN.draw(window);
         exitBTN.draw(window);
-        //snake.drawSnake(window);
 
         // Update the window
         window.display();
     }
 }
 
-void gameMenuUI(sf::RenderWindow& window)
+void gameMenuUI(sf::RenderWindow& window, bool isPressed)
 {
-    SnakeClass snake(100,50);
-    snake.headSkin.loadFromFile("snakeHead.png");
-    snake.bodySkin.loadFromFile("snakeSkin.png");
-
-    sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("background.png");
-
-    sf::Sprite backgroundSPR;
-    backgroundSPR.setTexture(backgroundTEX);
-
-    // Start the game loop
-    while (window.isOpen())
+    if(isPressed)
     {
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event))
+        SnakeClass *snake = new SnakeClass(100,10);
+        snake->headSkin.loadFromFile("snakeHead.png");
+        snake->bodySkin.loadFromFile("snakeSkin.png");
+
+        sf::Texture backgroundTEX;
+        backgroundTEX.loadFromFile("background.png");
+
+        sf::Sprite backgroundSPR;
+        backgroundSPR.setTexture(backgroundTEX);
+
+        snake->head.node.setPosition(50.f, 50.f);
+        snake->safeArea.setWallColor(sf::Color::Red);
+        snake->safeArea.setWallPosition(0.f, 0.f);
+
+        // Start the game loop
+        while (window.isOpen())
         {
-
-            if (event.type == sf::Event::Closed)
+            // Process events
+            sf::Event event;
+            while (window.pollEvent(event))
             {
-                window.close();
+
+                if (event.type == sf::Event::Closed)
+                {
+                    window.close();
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                {
+                    delete snake;
+                    mainMenuUI(window);
+                }
+
+                snake->dpad();
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+
+            if(snake->lastMove != 0)
             {
-                snake.~SnakeClass();
-                mainMenuUI(window);
+                if(snake->checkSnakeCollision() == true)
+                {
+                    delete snake;
+                    mainMenuUI(window);
+                }
+
+                if(snake->checkWallHit() == true)
+                {
+                    delete snake;
+                    mainMenuUI(window);
+                }
+
+                snake->updatePosition(50.f);
+                std::cout<<snake->head.node.getPosition().x << " " << snake->head.node.getPosition().y <<std::endl;
             }
 
-            snake.dpad();
+            // Clear screen
+            window.clear();
 
+            // Draw the sprite
+            window.draw(backgroundSPR);
+            window.draw(snake->safeArea.top);
+            window.draw(snake->safeArea.left);
+            window.draw(snake->safeArea.bottom);
+            window.draw(snake->safeArea.right);
+            snake->drawSnake(window);
+
+            // Update the window
+            window.display();
         }
-
-        snake.updatePosition(50.f);
-
-        // Clear screen
-        window.clear();
-
-        // Draw the sprite
-        window.draw(backgroundSPR);
-
-        snake.drawSnake(window);
-
-        // Update the window
-        window.display();
     }
 }
 

@@ -7,7 +7,7 @@
 #include "game.hpp"
 
 void mainMenuUI(sf::RenderWindow& window);
-void gameMenuUI(sf::RenderWindow& window);
+void gameMenuUI(sf::RenderWindow& window, bool isPressed);
 
 
 #endif // GUI_HPP_INCLUDED

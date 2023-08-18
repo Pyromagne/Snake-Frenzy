@@ -1,24 +1,68 @@
 #include "../inc/game.hpp"
 #include "../inc/system.hpp"
 
+
 Snake::Snake()
 {
     node.setFillColor(sf::Color::White);
 }
 
+Wall::Wall(int width, int length)
+{
+    this->width = width;
+    this->length = length;
+    top = sf::RectangleShape(sf::Vector2f(float(width*25), 25.f));
+    left = sf::RectangleShape(sf::Vector2f(25.f, float(length*25)));
+    bottom = sf::RectangleShape(sf::Vector2f(float(width*25), 25.f));
+    right = sf::RectangleShape(sf::Vector2f(25.f, float(length*25)));
+}
+
+void Wall::setWallColor(sf::Color color)
+{
+    top.setFillColor(color);
+    left.setFillColor(color);
+    bottom.setFillColor(sf::Color::Blue);
+    right.setFillColor(sf::Color::Blue);
+}
+
+void Wall::setWallPosition(float x, float y)
+{
+    top.setPosition(x, y);
+    left.setPosition(x, y);
+    bottom.setPosition(x, (y + (length*25))-25);
+    right.setPosition((x + (width*25))-25, y);
+}
+
 SnakeClass::SnakeClass()
 {
+    /* if (body != nullptr)
+    {
+        log("true",debugMode);
+        delete[] body; // Deallocate the memory
+    }
+    delete[] body; */
     body = new Snake[200];
     log("Snake Created",debugMode);
 }
 
 SnakeClass::SnakeClass(unsigned int maxSnakeSize)
 {
+    /* if (body != nullptr)
+    {
+        log("true",debugMode);
+        delete[] body; // Deallocate the memory
+    }
+    delete[] body; */
     body = new Snake[maxSnakeSize];
     log("Snake Created",debugMode);
 }
 SnakeClass::SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize)
 {
+    /* if (body != nullptr)
+    {
+        log("true",debugMode);
+        delete[] body; // Deallocate the memory
+    } */
     body = new Snake[maxSnakeSize];
     if(snakeSize > maxSnakeSize)
     {
@@ -33,8 +77,8 @@ SnakeClass::SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize)
 
 SnakeClass::~SnakeClass()
 {
-    log("Snake Destroyed",debugMode);
     delete[] body;
+    log("Snake Destroyed",debugMode);
 }
 
 void SnakeClass::updatePosition(float speed = 100.f)
@@ -69,8 +113,6 @@ void SnakeClass::updatePosition(float speed = 100.f)
             head.node.setPosition(currentPosition);
         }
 
-
-
         updatePositionCLK.restart();
     }
 }
@@ -95,6 +137,41 @@ void SnakeClass::drawSnake(sf::RenderWindow& window)
     }
     window.draw(head.node);
     
+}
+
+bool SnakeClass::checkSnakeCollision()
+{
+    for (int i = 0; i < snakeSize; i++)
+    {
+        if(head.node.getGlobalBounds() == body[i].node.getGlobalBounds())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool SnakeClass::checkWallHit()
+{
+    if (head.node.getGlobalBounds().intersects(safeArea.top.getGlobalBounds()))
+    {
+        return true;
+    }
+    if(head.node.getGlobalBounds().intersects(safeArea.left.getGlobalBounds()))
+    {
+        return true;
+    }
+    if(head.node.getGlobalBounds().intersects(safeArea.bottom.getGlobalBounds()))
+    {
+        return true;
+    }
+    if(head.node.getGlobalBounds().intersects(safeArea.right.getGlobalBounds()))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void SnakeClass::dpad(void)
