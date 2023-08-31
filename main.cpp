@@ -24,3 +24,4 @@ int main()
 
 //there is a memory error when exiting a game, low priority for now.
 //it is probably because of poor control flow of a game in gui.cpp, the snake object is destructed two times
+//there is also a bug in control when pressing movement control fast in changing direction

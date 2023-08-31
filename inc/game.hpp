@@ -35,8 +35,9 @@ class Food
     unsigned short x = 0;
     unsigned short y = 0;
 
+    sf::Texture normFoodTEX;
     sf::Clock foodCLK;
-    void generateFood();
+    void generateFood(unsigned short width, unsigned short length);
 
 };
 
@@ -50,7 +51,9 @@ class SnakeClass
         sf::Clock updatePositionCLK;
         sf::Texture headSkin;
         sf::Texture bodySkin;
-        Wall wall = Wall(20,20);
+        sf::Texture wallSkin;
+        Wall wall = Wall(24,24);
+        //Wall wall = Wall(32,24); max wall value
 
         SnakeClass();
         SnakeClass(unsigned int maxSnakeSize);

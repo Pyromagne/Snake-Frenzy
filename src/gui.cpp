@@ -11,12 +11,12 @@ void mainMenuUI(sf::RenderWindow& window)
     RectButton playBTN(simpleSquareFNT, true, sf::Vector2f(50.f, 50.f));
     playBTN.setLabelColor(sf::Color::White, sf::Color::Green, sf::Color::Green);
     playBTN.setButtonColor(sf::Color::Transparent);
-    playBTN.setButtonLabel(50.f, "Play");
+    playBTN.setButtonLabel(40.f, "Classic");
 
     RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(50.f, 150.f));
     exitBTN.setLabelColor(sf::Color::White, sf::Color::Red, sf::Color::Red);
     exitBTN.setButtonColor(sf::Color::Transparent);
-    exitBTN.setButtonLabel(50.f, "Exit");
+    exitBTN.setButtonLabel(40.f, "Exit");
 
     sf::Texture backgroundTEX;
     backgroundTEX.loadFromFile("background.png");
@@ -76,6 +76,8 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
         snake->headSkin.loadFromFile("snakeHead.png");
         snake->bodySkin.loadFromFile("snakeSkin.png");
 
+        snake->wallSkin.loadFromFile("wall.png");
+
         sf::Texture backgroundTEX;
         backgroundTEX.loadFromFile("background.png");
 
@@ -83,10 +85,17 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
         backgroundSPR.setTexture(backgroundTEX);
 
         snake->head.node.setPosition(50.f, 50.f);
-        snake->wall.setWallColor(sf::Color::Red);
+
+        snake->wall.top.setTexture(&snake->wallSkin);
+        snake->wall.bottom.setTexture(&snake->wallSkin);
+        snake->wall.left.setTexture(&snake->wallSkin);
+        snake->wall.right.setTexture(&snake->wallSkin);
+
+        //snake->wall.setWallColor(sf::Color::Red);
         snake->wall.setWallPosition(0.f, 0.f);
 
         Food food;
+        food.normFoodTEX.loadFromFile("food.png");
 
         // Start the game loop
         while (window.isOpen())
@@ -141,17 +150,17 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
 
             if(food.x == 0 && food.y == 0)
             {
-                food.generateFood();
+                food.generateFood(snake->wall.width, snake->wall.length);
             }
             if(snake->checkFoodCollision(food))
             {
-                food.generateFood();
+                food.generateFood(snake->wall.width, snake->wall.length);
                 snake->snakeSize++;
                 std::cout<< "Food Hit! "<< snake->snakeSize <<std::endl;
             }
             if(snake->checkFoodHitBody(food))
             {
-                food.generateFood();
+                food.generateFood(snake->wall.width, snake->wall.length);
                 std::cout<< "SNAKE!!!!!!!" << std::endl;
             }
             window.draw(food.food);

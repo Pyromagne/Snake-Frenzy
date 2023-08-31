@@ -176,7 +176,7 @@ bool SnakeClass::checkWallHit()
 
 void SnakeClass::dpad(void)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && lastMove != 2)
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) && lastMove != 2)
     {
         if(!(lastMove == 1))
         {
@@ -184,7 +184,7 @@ void SnakeClass::dpad(void)
             lastMove = 1;
         }
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && lastMove != 1)
+    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) && lastMove != 1)
     {
         if (!(lastMove == 2))
         {
@@ -192,7 +192,7 @@ void SnakeClass::dpad(void)
             lastMove = 2;
         }
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && lastMove != 4)
+    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))&& lastMove != 4)
     {
         if (!(lastMove == 3))
         {
@@ -200,7 +200,7 @@ void SnakeClass::dpad(void)
             lastMove = 3;
         }
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && lastMove != 3)
+    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) && lastMove != 3)
     {
         if (!(lastMove == 4))
         {
@@ -232,15 +232,15 @@ bool SnakeClass::checkFoodHitBody(Food& food)
     return collide;
 }
 
-void Food::generateFood()
+void Food::generateFood(unsigned short width, unsigned short length)
 {
-    unsigned int min = genRandom(1, 18);
-    unsigned int max = genRandom(1, 18);
+    unsigned short min = genRandom(1, (width - 2));
+    unsigned short max = genRandom(1, (length - 2));
 
     this->x = 25 * min;
     this->y = 25 * max;
     
     food.setPosition(x , y);
     
-    food.setFillColor(sf::Color::Green);
+    food.setTexture(&normFoodTEX);
 }
