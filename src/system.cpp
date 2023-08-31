@@ -29,3 +29,10 @@ void err(std::string err, bool debugMode = false)
         ce::reset();
     }
 }
+
+unsigned short genRandom(unsigned short min, unsigned short max)
+{
+    unsigned short randNum = (rand() % (max - min + 1)) + min;
+
+    return randNum;
+}

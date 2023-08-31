@@ -154,19 +154,19 @@ bool SnakeClass::checkSnakeCollision()
 
 bool SnakeClass::checkWallHit()
 {
-    if (head.node.getGlobalBounds().intersects(safeArea.top.getGlobalBounds()))
+    if (head.node.getGlobalBounds().intersects(wall.top.getGlobalBounds()))
     {
         return true;
     }
-    if(head.node.getGlobalBounds().intersects(safeArea.left.getGlobalBounds()))
+    if(head.node.getGlobalBounds().intersects(wall.left.getGlobalBounds()))
     {
         return true;
     }
-    if(head.node.getGlobalBounds().intersects(safeArea.bottom.getGlobalBounds()))
+    if(head.node.getGlobalBounds().intersects(wall.bottom.getGlobalBounds()))
     {
         return true;
     }
-    if(head.node.getGlobalBounds().intersects(safeArea.right.getGlobalBounds()))
+    if(head.node.getGlobalBounds().intersects(wall.right.getGlobalBounds()))
     {
         return true;
     }
@@ -208,4 +208,39 @@ void SnakeClass::dpad(void)
             lastMove = 4;
         }
     }
+}
+
+bool SnakeClass::checkFoodCollision(Food& food)
+{
+    if (head.node.getGlobalBounds().intersects(food.food.getGlobalBounds()))
+    {
+        return true;
+    }
+    else return false;
+}
+
+bool SnakeClass::checkFoodHitBody(Food& food)
+{
+    bool collide = false;
+    for (int i = 0; i < snakeSize; i++)
+    {
+        if (body[i].node.getGlobalBounds().intersects(food.food.getGlobalBounds()))
+        {
+            collide = true;
+        }
+    }
+    return collide;
+}
+
+void Food::generateFood()
+{
+    unsigned int min = genRandom(1, 18);
+    unsigned int max = genRandom(1, 18);
+
+    this->x = 25 * min;
+    this->y = 25 * max;
+    
+    food.setPosition(x , y);
+    
+    food.setFillColor(sf::Color::Green);
 }

@@ -28,6 +28,18 @@ struct Wall
     Wall(int width, int length);
 };
 
+class Food
+{
+    public:
+    sf::RectangleShape food = sf::RectangleShape(sf::Vector2f(25.f,25.f));
+    unsigned short x = 0;
+    unsigned short y = 0;
+
+    sf::Clock foodCLK;
+    void generateFood();
+
+};
+
 class SnakeClass
 {
     public:
@@ -38,7 +50,7 @@ class SnakeClass
         sf::Clock updatePositionCLK;
         sf::Texture headSkin;
         sf::Texture bodySkin;
-        Wall safeArea = Wall(20,20);
+        Wall wall = Wall(20,20);
 
         SnakeClass();
         SnakeClass(unsigned int maxSnakeSize);
@@ -50,7 +62,11 @@ class SnakeClass
         bool checkWallHit();
         void updatePosition(float speed);
         void dpad(void);
+        bool checkFoodCollision(Food& food);
+        bool checkFoodHitBody(Food& food);
     //end of public
 };
+
+
 
 #endif // GAME_HPP_INCLUDED
