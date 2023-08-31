@@ -72,30 +72,28 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
     window.setMouseCursorVisible(false);
     if(isPressed)
     {
-        SnakeClass *snake = new SnakeClass(100,3);
-        snake->headSkin.loadFromFile("snakeHead.png");
-        snake->bodySkin.loadFromFile("snakeSkin.png");
-
-        snake->wallSkin.loadFromFile("wall.png");
-
         sf::Texture backgroundTEX;
         backgroundTEX.loadFromFile("background.png");
 
         sf::Sprite backgroundSPR;
         backgroundSPR.setTexture(backgroundTEX);
 
+        SnakeClass *snake = new SnakeClass(100,3);
+        snake->headTEX.loadFromFile("snakeHead.png");
+        snake->bodyTEX.loadFromFile("snakeSkin.png");
+
         snake->head.node.setPosition(50.f, 50.f);
 
-        snake->wall.top.setTexture(&snake->wallSkin);
-        snake->wall.bottom.setTexture(&snake->wallSkin);
-        snake->wall.left.setTexture(&snake->wallSkin);
-        snake->wall.right.setTexture(&snake->wallSkin);
+        sf::Texture wallTEX;
+        wallTEX.loadFromFile("wall.png");
+        snake->wall.setWallTexture(wallTEX);
 
-        //snake->wall.setWallColor(sf::Color::Red);
         snake->wall.setWallPosition(0.f, 0.f);
 
         Food food;
-        food.normFoodTEX.loadFromFile("food.png");
+        sf::Texture foodTEX;
+        foodTEX.loadFromFile("food.png");
+        food.setFoodTexture(foodTEX);
 
         // Start the game loop
         while (window.isOpen())
@@ -132,37 +130,34 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
                 }
 
                 snake->updatePosition(50.f);
-                //std::cout<<snake->head.node.getPosition().x << " " << snake->head.node.getPosition().y <<std::endl;
             }
-
-            
 
             // Clear screen
             window.clear();
 
             // Draw the sprite
             window.draw(backgroundSPR);
-            window.draw(snake->wall.top);
-            window.draw(snake->wall.left);
-            window.draw(snake->wall.bottom);
-            window.draw(snake->wall.right);
+            snake->wall.drawWall(window);
             snake->drawSnake(window);
 
-            if(food.x == 0 && food.y == 0)
-            {
-                food.generateFood(snake->wall.width, snake->wall.length);
-            }
-            if(snake->checkFoodCollision(food))
-            {
-                food.generateFood(snake->wall.width, snake->wall.length);
-                snake->snakeSize++;
-                std::cout<< "Food Hit! "<< snake->snakeSize <<std::endl;
-            }
-            if(snake->checkFoodHitBody(food))
-            {
-                food.generateFood(snake->wall.width, snake->wall.length);
-                std::cout<< "SNAKE!!!!!!!" << std::endl;
-            }
+            /* TEMPORARY PLACE */
+                if(food.x == 0 && food.y == 0)
+                {
+                    food.generateFood(snake->wall.width, snake->wall.length);
+                }
+                if(snake->checkFoodCollision(food))
+                {
+                    food.generateFood(snake->wall.width, snake->wall.length);
+                    snake->snakeSize++;
+                    std::cout<< "Food Hit! "<< snake->snakeSize <<std::endl;
+                }
+                if(snake->checkFoodHitBody(food))
+                {
+                    food.generateFood(snake->wall.width, snake->wall.length);
+                    std::cout<< "SNAKE!!!!!!!" << std::endl;
+                }
+            /* TEMPORARY PLACE */
+
             window.draw(food.food);
             // Update the window
             window.display();

@@ -6,70 +6,67 @@
 
 struct Snake
 {
+    Snake();
     sf::RectangleShape node = sf::RectangleShape(sf::Vector2f(25.f,25.f));
     sf::Vector2f* nextNodes;
     sf::Vector2f prevNodes;
     sf::Vector2i gridPosition;
-
-    Snake();
 };
 
 struct Wall
 {
+    Wall(int width, int length);
+
+    unsigned short width;
+    unsigned short length;
     sf::RectangleShape top;
     sf::RectangleShape bottom;
     sf::RectangleShape left;
     sf::RectangleShape right;
 
-    int width;
-    int length;
     void setWallColor(sf::Color);
     void setWallPosition(float x, float y);
-    Wall(int width, int length);
+    void setWallTexture(sf::Texture& texture);
+    void drawWall(sf::RenderWindow& window);
 };
 
 class Food
 {
     public:
-    sf::RectangleShape food = sf::RectangleShape(sf::Vector2f(25.f,25.f));
-    unsigned short x = 0;
-    unsigned short y = 0;
+        unsigned short x = 0;
+        unsigned short y = 0;
+        sf::RectangleShape food = sf::RectangleShape(sf::Vector2f(25.f,25.f));
 
-    sf::Texture normFoodTEX;
-    sf::Clock foodCLK;
-    void generateFood(unsigned short width, unsigned short length);
-
+        void generateFood(unsigned short width, unsigned short length);
+        void setFoodTexture(sf::Texture& texture);
+    //end of public
 };
 
 class SnakeClass
 {
     public:
-        int snakeSize = 10;
-        Snake head;
-        Snake* body = nullptr;
-        int lastMove = 0;
-        sf::Clock updatePositionCLK;
-        sf::Texture headSkin;
-        sf::Texture bodySkin;
-        sf::Texture wallSkin;
-        Wall wall = Wall(24,24);
-        //Wall wall = Wall(32,24); max wall value
-
         SnakeClass();
         SnakeClass(unsigned int maxSnakeSize);
         SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize);
         ~SnakeClass();
 
-        void drawSnake(sf::RenderWindow& window);
-        bool checkSnakeCollision();
-        bool checkWallHit();
-        void updatePosition(float speed);
+        unsigned int snakeSize = 10;
+        unsigned short lastMove = 0;
+        sf::Clock updatePositionCLK;
+        sf::Texture headTEX;
+        sf::Texture bodyTEX;
+        Snake head;
+        Snake* body = nullptr;
+        Wall wall = Wall(24,24); /* Wall wall = Wall(32,24); max wall value */ /* adding wall to the SnakeClass is not final it can be independent object */
+
         void dpad(void);
+        void drawSnake(sf::RenderWindow& window);
+        void updatePosition(float speed);
+        bool checkSnakeCollision(void);
+        bool checkWallHit(void);
         bool checkFoodCollision(Food& food);
         bool checkFoodHitBody(Food& food);
     //end of public
 };
-
-
 
 #endif // GAME_HPP_INCLUDED

@@ -33,36 +33,51 @@ void Wall::setWallPosition(float x, float y)
     right.setPosition((x + (width*25))-25, y);
 }
 
+void Wall::setWallTexture(sf::Texture& texture)
+{
+    top.setTexture(&texture);
+    bottom.setTexture(&texture);
+    left.setTexture(&texture);
+    right.setTexture(&texture);
+}
+
+void Wall::drawWall(sf::RenderWindow& window)
+{
+    window.draw(top);
+    window.draw(left);
+    window.draw(bottom);
+    window.draw(right);
+}
+
+void Food::generateFood(unsigned short width, unsigned short length)
+{
+    unsigned short min = genRandom(1, (width - 2));
+    unsigned short max = genRandom(1, (length - 2));
+
+    this->x = 25 * min;
+    this->y = 25 * max;
+
+    food.setPosition(x , y);
+}
+
+void Food::setFoodTexture(sf::Texture& texture)
+{
+    food.setTexture(&texture);
+}
+
 SnakeClass::SnakeClass()
 {
-    /* if (body != nullptr)
-    {
-        log("true",debugMode);
-        delete[] body; // Deallocate the memory
-    }
-    delete[] body; */
     body = new Snake[200];
     log("Snake Created",debugMode);
 }
 
 SnakeClass::SnakeClass(unsigned int maxSnakeSize)
 {
-    /* if (body != nullptr)
-    {
-        log("true",debugMode);
-        delete[] body; // Deallocate the memory
-    }
-    delete[] body; */
     body = new Snake[maxSnakeSize];
     log("Snake Created",debugMode);
 }
 SnakeClass::SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize)
 {
-    /* if (body != nullptr)
-    {
-        log("true",debugMode);
-        delete[] body; // Deallocate the memory
-    } */
     body = new Snake[maxSnakeSize];
     if(snakeSize > maxSnakeSize)
     {
@@ -79,99 +94,6 @@ SnakeClass::~SnakeClass()
 {
     delete[] body;
     log("Snake Destroyed",debugMode);
-}
-
-void SnakeClass::updatePosition(float speed = 100.f)
-{
-    if (updatePositionCLK.getElapsedTime().asMilliseconds() > speed)
-    {
-        head.prevNodes = head.node.getPosition();
-        for (int i = 0; i < snakeSize; i++)
-        {
-            body[i+1].prevNodes = body[i].node.getPosition();
-        }
-
-        sf::Vector2f currentPosition = head.node.getPosition();
-        if (lastMove == 1)
-        {
-            currentPosition.x -= 25.f;
-            head.node.setPosition(currentPosition);
-        }
-        else if (lastMove == 2)
-        {
-            currentPosition.x += 25.f;
-            head.node.setPosition(currentPosition);
-        }
-        else if (lastMove == 3)
-        {
-            currentPosition.y -= 25.f;
-            head.node.setPosition(currentPosition);
-        }
-        else if (lastMove == 4)
-        {
-            currentPosition.y += 25.f ;
-            head.node.setPosition(currentPosition);
-        }
-
-        updatePositionCLK.restart();
-    }
-}
-
-void SnakeClass::drawSnake(sf::RenderWindow& window)
-{
-    body[0].nextNodes = &head.prevNodes;
-    body[0].node.setPosition(*body[0].nextNodes);
-
-    for (int i = 0; i < snakeSize; i++)
-    {
-        body[i+1].nextNodes = &body[i].prevNodes;
-        body[i+1].node.setPosition(body[i+1].prevNodes);
-    }
-
-    head.node.setTexture(&headSkin);
-
-    for (int i = 0; i < snakeSize; i++)
-    {
-        body[i].node.setTexture(&bodySkin);
-        window.draw(body[i].node);
-    }
-    window.draw(head.node);
-    
-}
-
-bool SnakeClass::checkSnakeCollision()
-{
-    for (int i = 0; i < snakeSize; i++)
-    {
-        if(head.node.getGlobalBounds() == body[i].node.getGlobalBounds())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool SnakeClass::checkWallHit()
-{
-    if (head.node.getGlobalBounds().intersects(wall.top.getGlobalBounds()))
-    {
-        return true;
-    }
-    if(head.node.getGlobalBounds().intersects(wall.left.getGlobalBounds()))
-    {
-        return true;
-    }
-    if(head.node.getGlobalBounds().intersects(wall.bottom.getGlobalBounds()))
-    {
-        return true;
-    }
-    if(head.node.getGlobalBounds().intersects(wall.right.getGlobalBounds()))
-    {
-        return true;
-    }
-
-    return false;
 }
 
 void SnakeClass::dpad(void)
@@ -210,6 +132,100 @@ void SnakeClass::dpad(void)
     }
 }
 
+void SnakeClass::drawSnake(sf::RenderWindow& window)
+{
+    body[0].nextNodes = &head.prevNodes;
+    body[0].node.setPosition(*body[0].nextNodes);
+
+    for (unsigned short i = 0; i < snakeSize; i++)
+    {
+        body[i+1].nextNodes = &body[i].prevNodes;
+        body[i+1].node.setPosition(body[i+1].prevNodes);
+    }
+
+    /*SETTING SNAKE TEXTURES HERE IS NOT FINAL*/
+    head.node.setTexture(&headTEX);
+
+    for (unsigned short i = 0; i < snakeSize; i++)
+    {
+        body[i].node.setTexture(&bodyTEX);
+        window.draw(body[i].node);
+    }
+    
+    window.draw(head.node);
+}
+
+void SnakeClass::updatePosition(float speed = 100.f)
+{
+    if (updatePositionCLK.getElapsedTime().asMilliseconds() > speed)
+    {
+        head.prevNodes = head.node.getPosition();
+        for (unsigned short i = 0; i < snakeSize; i++)
+        {
+            body[i+1].prevNodes = body[i].node.getPosition();
+        }
+
+        sf::Vector2f currentPosition = head.node.getPosition();
+        if (lastMove == 1)
+        {
+            currentPosition.x -= 25.f;
+            head.node.setPosition(currentPosition);
+        }
+        else if (lastMove == 2)
+        {
+            currentPosition.x += 25.f;
+            head.node.setPosition(currentPosition);
+        }
+        else if (lastMove == 3)
+        {
+            currentPosition.y -= 25.f;
+            head.node.setPosition(currentPosition);
+        }
+        else if (lastMove == 4)
+        {
+            currentPosition.y += 25.f ;
+            head.node.setPosition(currentPosition);
+        }
+
+        updatePositionCLK.restart();
+    }
+}
+
+bool SnakeClass::checkSnakeCollision()
+{
+    for (unsigned short i = 0; i < snakeSize; i++)
+    {
+        if(head.node.getGlobalBounds() == body[i].node.getGlobalBounds())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool SnakeClass::checkWallHit()
+{
+    if (head.node.getGlobalBounds().intersects(wall.top.getGlobalBounds()))
+    {
+        return true;
+    }
+    if(head.node.getGlobalBounds().intersects(wall.left.getGlobalBounds()))
+    {
+        return true;
+    }
+    if(head.node.getGlobalBounds().intersects(wall.bottom.getGlobalBounds()))
+    {
+        return true;
+    }
+    if(head.node.getGlobalBounds().intersects(wall.right.getGlobalBounds()))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 bool SnakeClass::checkFoodCollision(Food& food)
 {
     if (head.node.getGlobalBounds().intersects(food.food.getGlobalBounds()))
@@ -222,7 +238,7 @@ bool SnakeClass::checkFoodCollision(Food& food)
 bool SnakeClass::checkFoodHitBody(Food& food)
 {
     bool collide = false;
-    for (int i = 0; i < snakeSize; i++)
+    for (unsigned short i = 0; i < snakeSize; i++)
     {
         if (body[i].node.getGlobalBounds().intersects(food.food.getGlobalBounds()))
         {
@@ -230,17 +246,4 @@ bool SnakeClass::checkFoodHitBody(Food& food)
         }
     }
     return collide;
-}
-
-void Food::generateFood(unsigned short width, unsigned short length)
-{
-    unsigned short min = genRandom(1, (width - 2));
-    unsigned short max = genRandom(1, (length - 2));
-
-    this->x = 25 * min;
-    this->y = 25 * max;
-    
-    food.setPosition(x , y);
-    
-    food.setTexture(&normFoodTEX);
 }
