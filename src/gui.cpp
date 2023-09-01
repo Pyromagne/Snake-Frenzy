@@ -149,12 +149,13 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
                 {
                     food.generateFood(snake->wall.width, snake->wall.length);
                     snake->snakeSize++;
-                    std::cout<< "Food Hit! "<< snake->snakeSize <<std::endl;
+                    log("Food eaten",debugMode);
+                    log("Score: " + std::to_string(snake->snakeSize * 100),debugMode);
                 }
                 if(snake->checkFoodHitBody(food))
                 {
                     food.generateFood(snake->wall.width, snake->wall.length);
-                    std::cout<< "SNAKE!!!!!!!" << std::endl;
+                    log("Food hit body detected, changing food position",debugMode);
                 }
             /* TEMPORARY PLACE */
 
