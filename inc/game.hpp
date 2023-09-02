@@ -4,13 +4,22 @@
 #include <SFML/Graphics.hpp>
 #include "system.hpp"
 
-struct Snake
+enum direction
 {
-    Snake();
-    sf::RectangleShape node = sf::RectangleShape(sf::Vector2f(25.f,25.f));
+    null = 0,
+    left = 1,
+    right = 2,
+    up = 3,
+    down = 4
+};
+
+struct Node
+{
+    Node();
+    sf::RectangleShape nodeRect = sf::RectangleShape(sf::Vector2f(25.f,25.f));
     sf::Vector2f* nextNodes;
     sf::Vector2f prevNodes;
-    sf::Vector2i gridPosition;
+    sf::Vector2i gridPosition; /* For future features make a position map in grid*/ /* Not yet use */
 };
 
 struct Wall
@@ -42,21 +51,22 @@ class Food
     //end of public
 };
 
-class SnakeClass
+class Snake
 {
     public:
-        SnakeClass();
-        SnakeClass(unsigned int maxSnakeSize);
-        SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize);
-        ~SnakeClass();
+        Snake();
+        Snake(unsigned int maxSnakeSize);
+        Snake(unsigned int maxSnakeSize, unsigned int snakeSize);
+        ~Snake();
 
         unsigned int snakeSize = 10;
-        unsigned short lastMove = 0;
+        direction lastMove = null;
+        direction lastMove2 = null;
         sf::Clock updatePositionCLK;
         sf::Texture headTEX;
         sf::Texture bodyTEX;
-        Snake head;
-        Snake* body = nullptr;
+        Node head;
+        Node* body = nullptr;
         Wall wall = Wall(24,24); /* Wall wall = Wall(32,24); max wall value */ /* adding wall to the SnakeClass is not final it can be independent object */
 
         void dpad(void);

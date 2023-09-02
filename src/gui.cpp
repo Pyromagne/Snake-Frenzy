@@ -19,10 +19,11 @@ void mainMenuUI(sf::RenderWindow& window)
     exitBTN.setButtonLabel(40.f, "Exit");
 
     sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("background.png");
+    backgroundTEX.loadFromFile("backgroundTile.png");
+    backgroundTEX.setRepeated(true);
 
-    sf::Sprite backgroundSPR;
-    backgroundSPR.setTexture(backgroundTEX);
+    sf::Sprite backgroundSPR(backgroundTEX);
+    backgroundSPR.setTextureRect(sf::IntRect(0, 0, 1280, 720));
 
     sf::Event event;
     //temporary fix the visual bug in buttons
@@ -49,7 +50,7 @@ void mainMenuUI(sf::RenderWindow& window)
             }
             if (playBTN.isPressed)
             {
-                gameMenuUI(window, true);
+                gameClassicUI(window, true);
             }
         }
 
@@ -67,22 +68,48 @@ void mainMenuUI(sf::RenderWindow& window)
     }
 }
 
-void gameMenuUI(sf::RenderWindow& window, bool isPressed)
+void gameClassicUI(sf::RenderWindow& window, bool isPressed)
 {
     window.setMouseCursorVisible(false);
+    unsigned int score = 0;
+
     if(isPressed)
     {
         sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("background.png");
+        backgroundTEX.loadFromFile("backgroundTile.png");
+        backgroundTEX.setRepeated(true);
 
-        sf::Sprite backgroundSPR;
-        backgroundSPR.setTexture(backgroundTEX);
+        sf::Sprite backgroundSPR(backgroundTEX);
+        backgroundSPR.setTextureRect(sf::IntRect(0, 0, 1280, 720));
 
-        SnakeClass *snake = new SnakeClass(100,3);
+        sf::Font simpleSquareFNT;
+        simpleSquareFNT.loadFromFile("ST-SimpleSquare.otf");
+
+        sf::Text modeTitleTXT;
+        modeTitleTXT.setFont(simpleSquareFNT);
+        modeTitleTXT.setFillColor(sf::Color::White);
+        modeTitleTXT.setString("Classic");
+        modeTitleTXT.setCharacterSize(33.f);
+        modeTitleTXT.setPosition(sf::Vector2f(605.f, 10.f));
+
+        sf::Text scoreLabelTXT;
+        scoreLabelTXT.setFont(simpleSquareFNT);
+        scoreLabelTXT.setFillColor(sf::Color::White);
+        scoreLabelTXT.setString("Score:");
+        scoreLabelTXT.setCharacterSize(30.f);
+        scoreLabelTXT.setPosition(sf::Vector2f(605.f, 60.f));
+
+        sf::Text scoreTXT;
+        scoreTXT.setFont(simpleSquareFNT);
+        scoreTXT.setFillColor(sf::Color::White);
+        scoreTXT.setCharacterSize(30.f);
+        scoreTXT.setPosition(sf::Vector2f(740.f, 60.f));
+
+        Snake *snake = new Snake(100,3);
         snake->headTEX.loadFromFile("snakeHead.png");
         snake->bodyTEX.loadFromFile("snakeSkin.png");
 
-        snake->head.node.setPosition(50.f, 50.f);
+        snake->head.nodeRect.setPosition(50.f, 50.f);
 
         sf::Texture wallTEX;
         wallTEX.loadFromFile("wall.png");
@@ -137,8 +164,15 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
 
             // Draw the sprite
             window.draw(backgroundSPR);
+
             snake->wall.drawWall(window);
             snake->drawSnake(window);
+
+            window.draw(modeTitleTXT);
+            window.draw(scoreLabelTXT);
+            
+            scoreTXT.setString(std::to_string(score));
+            window.draw(scoreTXT);
 
             /* TEMPORARY PLACE */
                 if(food.x == 0 && food.y == 0)
@@ -150,7 +184,8 @@ void gameMenuUI(sf::RenderWindow& window, bool isPressed)
                     food.generateFood(snake->wall.width, snake->wall.length);
                     snake->snakeSize++;
                     log("Food eaten",debugMode);
-                    log("Score: " + std::to_string(snake->snakeSize * 100),debugMode);
+                    score = score + 100;
+                    log("Score: " + std::to_string(score),debugMode);
                 }
                 if(snake->checkFoodHitBody(food))
                 {

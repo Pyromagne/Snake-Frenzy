@@ -9,10 +9,10 @@ int main()
 {
     enable_vtp();
     srand(time(0));
-    
+
     log("Game Started",debugMode);
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Snake Frenzy", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1275, 700), "Snake Frenzy", sf::Style::Titlebar | sf::Style::Close);
     //sf::RenderWindow window(sf::VideoMode(1440, 900), "Snake Frenzy", sf::Style::Fullscreen | sf::Style::Close);
 
     mainMenuUI(window);

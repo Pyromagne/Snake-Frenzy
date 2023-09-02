@@ -2,9 +2,9 @@
 #include "../inc/system.hpp"
 
 
-Snake::Snake()
+Node::Node()
 {
-    node.setFillColor(sf::Color::White);
+    nodeRect.setFillColor(sf::Color::White);
 }
 
 Wall::Wall(int width, int length)
@@ -65,20 +65,21 @@ void Food::setFoodTexture(sf::Texture& texture)
     food.setTexture(&texture);
 }
 
-SnakeClass::SnakeClass()
+Snake::Snake()
 {
-    body = new Snake[200];
+    body = new Node[200];
     log("Snake Created",debugMode);
 }
 
-SnakeClass::SnakeClass(unsigned int maxSnakeSize)
+Snake::Snake(unsigned int maxSnakeSize)
 {
-    body = new Snake[maxSnakeSize];
+    body = new Node[maxSnakeSize];
     log("Snake Created",debugMode);
 }
-SnakeClass::SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize)
+
+Snake::Snake(unsigned int maxSnakeSize, unsigned int snakeSize)
 {
-    body = new Snake[maxSnakeSize];
+    body = new Node[maxSnakeSize];
     if(snakeSize > maxSnakeSize)
     {
         err("Size exceed Max Value",debugMode);
@@ -90,112 +91,113 @@ SnakeClass::SnakeClass(unsigned int maxSnakeSize, unsigned int snakeSize)
     }
 }
 
-SnakeClass::~SnakeClass()
+Snake::~Snake()
 {
     delete[] body;
     log("Snake Destroyed",debugMode);
 }
 
-void SnakeClass::dpad(void)
+void Snake::dpad(void)
 {
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) && lastMove != 2)
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) && lastMove2 != right)
     {
-        if(!(lastMove == 1))
+        if(!(lastMove2 == left))
         {
             log("LEFT", debugMode);
-            lastMove = 1;
+            lastMove = left;
         }
     }
-    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) && lastMove != 1)
+    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) && lastMove2 != left)
     {
-        if (!(lastMove == 2))
+        if (!(lastMove2 == right))
         {
             log("RIGHT", debugMode);
-            lastMove = 2;
+            lastMove = right;
         }
     }
-    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))&& lastMove != 4)
+    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))&& lastMove2 != down)
     {
-        if (!(lastMove == 3))
+        if (!(lastMove2 == up))
         {
             log("UP", debugMode);
-            lastMove = 3;
+            lastMove = up;
         }
     }
-    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) && lastMove != 3)
+    else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) && lastMove2 != up)
     {
-        if (!(lastMove == 4))
+        if (!(lastMove2 == down))
         {
             log("DOWN", debugMode);
-            lastMove = 4;
+            lastMove = down;
         }
     }
 }
 
-void SnakeClass::drawSnake(sf::RenderWindow& window)
+void Snake::drawSnake(sf::RenderWindow& window)
 {
     body[0].nextNodes = &head.prevNodes;
-    body[0].node.setPosition(*body[0].nextNodes);
+    body[0].nodeRect.setPosition(*body[0].nextNodes);
 
     for (unsigned short i = 0; i < snakeSize; i++)
     {
         body[i+1].nextNodes = &body[i].prevNodes;
-        body[i+1].node.setPosition(body[i+1].prevNodes);
+        body[i+1].nodeRect.setPosition(body[i+1].prevNodes);
     }
 
     /*SETTING SNAKE TEXTURES HERE IS NOT FINAL*/
-    head.node.setTexture(&headTEX);
+    head.nodeRect.setTexture(&headTEX);
 
     for (unsigned short i = 0; i < snakeSize; i++)
     {
-        body[i].node.setTexture(&bodyTEX);
-        window.draw(body[i].node);
+        body[i].nodeRect.setTexture(&bodyTEX);
+        window.draw(body[i].nodeRect);
     }
     
-    window.draw(head.node);
+    window.draw(head.nodeRect);
 }
 
-void SnakeClass::updatePosition(float speed = 100.f)
+void Snake::updatePosition(float speed = 100.f)
 {
     if (updatePositionCLK.getElapsedTime().asMilliseconds() > speed)
     {
-        head.prevNodes = head.node.getPosition();
+        head.prevNodes = head.nodeRect.getPosition();
         for (unsigned short i = 0; i < snakeSize; i++)
         {
-            body[i+1].prevNodes = body[i].node.getPosition();
+            body[i+1].prevNodes = body[i].nodeRect.getPosition();
         }
 
-        sf::Vector2f currentPosition = head.node.getPosition();
-        if (lastMove == 1)
+        sf::Vector2f currentPosition = head.nodeRect.getPosition();
+        if (lastMove == left)
         {
             currentPosition.x -= 25.f;
-            head.node.setPosition(currentPosition);
+            head.nodeRect.setPosition(currentPosition);
         }
-        else if (lastMove == 2)
+        else if (lastMove == right)
         {
             currentPosition.x += 25.f;
-            head.node.setPosition(currentPosition);
+            head.nodeRect.setPosition(currentPosition);
         }
-        else if (lastMove == 3)
+        else if (lastMove == up)
         {
             currentPosition.y -= 25.f;
-            head.node.setPosition(currentPosition);
+            head.nodeRect.setPosition(currentPosition);
         }
-        else if (lastMove == 4)
+        else if (lastMove == down)
         {
             currentPosition.y += 25.f ;
-            head.node.setPosition(currentPosition);
+            head.nodeRect.setPosition(currentPosition);
         }
+        lastMove2 = lastMove;
 
         updatePositionCLK.restart();
     }
 }
 
-bool SnakeClass::checkSnakeCollision()
+bool Snake::checkSnakeCollision()
 {
     for (unsigned short i = 0; i < snakeSize; i++)
     {
-        if(head.node.getGlobalBounds() == body[i].node.getGlobalBounds())
+        if(head.nodeRect.getGlobalBounds() == body[i].nodeRect.getGlobalBounds())
         {
             return true;
         }
@@ -204,21 +206,21 @@ bool SnakeClass::checkSnakeCollision()
     return false;
 }
 
-bool SnakeClass::checkWallHit()
+bool Snake::checkWallHit()
 {
-    if (head.node.getGlobalBounds().intersects(wall.top.getGlobalBounds()))
+    if (head.nodeRect.getGlobalBounds().intersects(wall.top.getGlobalBounds()))
     {
         return true;
     }
-    if(head.node.getGlobalBounds().intersects(wall.left.getGlobalBounds()))
+    if(head.nodeRect.getGlobalBounds().intersects(wall.left.getGlobalBounds()))
     {
         return true;
     }
-    if(head.node.getGlobalBounds().intersects(wall.bottom.getGlobalBounds()))
+    if(head.nodeRect.getGlobalBounds().intersects(wall.bottom.getGlobalBounds()))
     {
         return true;
     }
-    if(head.node.getGlobalBounds().intersects(wall.right.getGlobalBounds()))
+    if(head.nodeRect.getGlobalBounds().intersects(wall.right.getGlobalBounds()))
     {
         return true;
     }
@@ -226,21 +228,21 @@ bool SnakeClass::checkWallHit()
     return false;
 }
 
-bool SnakeClass::checkFoodCollision(Food& food)
+bool Snake::checkFoodCollision(Food& food)
 {
-    if (head.node.getGlobalBounds().intersects(food.food.getGlobalBounds()))
+    if (head.nodeRect.getGlobalBounds().intersects(food.food.getGlobalBounds()))
     {
         return true;
     }
     else return false;
 }
 
-bool SnakeClass::checkFoodHitBody(Food& food)
+bool Snake::checkFoodHitBody(Food& food)
 {
     bool collide = false;
     for (unsigned short i = 0; i < snakeSize; i++)
     {
-        if (body[i].node.getGlobalBounds().intersects(food.food.getGlobalBounds()))
+        if (body[i].nodeRect.getGlobalBounds().intersects(food.food.getGlobalBounds()))
         {
             collide = true;
         }
