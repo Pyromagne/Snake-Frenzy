@@ -4,6 +4,7 @@
 #include "inc/gui.hpp"
 
 bool debugMode = true;
+sf::Font defaultFont;
 
 int main()
 {
@@ -12,8 +13,27 @@ int main()
 
     log("Game Started",debugMode);
 
-    sf::RenderWindow window(sf::VideoMode(1275, 700), "Snake Frenzy", sf::Style::Titlebar | sf::Style::Close);
-    //sf::RenderWindow window(sf::VideoMode(1440, 900), "Snake Frenzy", sf::Style::Fullscreen | sf::Style::Close);
+    sf::RenderWindow window;
+    int videoMode = 1;
+
+    //defaultFont.loadFromFile("ST-SimpleSquare.otf");
+
+    if(videoMode == 1)
+    {
+        window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
+    }
+    else if(videoMode == 2)
+    {
+        window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:10 */
+    }
+    else if(videoMode == 3)
+    {
+        window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:9 */
+    }
+    else if(videoMode == 4)
+    {
+        window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:10 */
+    }
 
     mainMenuUI(window);
     //gameMenuUI(window, true);
@@ -22,6 +42,4 @@ int main()
     return EXIT_SUCCESS;
 }
 
-//there is a memory error when exiting a game, low priority for now.
-//it is probably because of poor control flow of a game in gui.cpp, the snake object is destructed two times
-//there is also a bug in control when pressing movement control fast in changing direction
+//memory issue fixed but flow of the game must be improved

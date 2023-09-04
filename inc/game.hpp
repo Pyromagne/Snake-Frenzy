@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include "system.hpp"
 
+extern sf::Font defaultFont;
+
 enum direction
 {
     null = 0,
@@ -28,6 +30,8 @@ struct Wall
 
     unsigned short width;
     unsigned short length;
+    unsigned short x;
+    unsigned short y;
     sf::RectangleShape top;
     sf::RectangleShape bottom;
     sf::RectangleShape left;
@@ -46,7 +50,7 @@ class Food
         unsigned short y = 0;
         sf::RectangleShape food = sf::RectangleShape(sf::Vector2f(25.f,25.f));
 
-        void generateFood(unsigned short width, unsigned short length);
+        void generateFood(unsigned short width, unsigned short length, unsigned short xWall = 0, unsigned short yWall = 0);
         void setFoodTexture(sf::Texture& texture);
     //end of public
 };
@@ -67,7 +71,7 @@ class Snake
         sf::Texture bodyTEX;
         Node head;
         Node* body = nullptr;
-        Wall wall = Wall(24,24); /* Wall wall = Wall(32,24); max wall value */ /* adding wall to the SnakeClass is not final it can be independent object */
+        Wall wall = Wall(36,25); /* max value of wall is calculated by dividing resolution by snakeSize */ /* adding wall to the SnakeClass is not final it can be independent object */
 
         void dpad(void);
         void drawSnake(sf::RenderWindow& window);

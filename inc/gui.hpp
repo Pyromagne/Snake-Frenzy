@@ -9,6 +9,8 @@
 void mainMenuUI(sf::RenderWindow& window);
 //bool isPressed is not necessary it will be remove soon
 void gameClassicUI(sf::RenderWindow& window, bool isPressed);
+void drawPause(sf::RenderWindow& window);
+void drawGameOver(sf::RenderWindow& window, unsigned int score);
 
 
 #endif // GUI_HPP_INCLUDED

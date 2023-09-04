@@ -31,6 +31,8 @@ void Wall::setWallPosition(float x, float y)
     left.setPosition(x, y);
     bottom.setPosition(x, (y + (length*25))-25);
     right.setPosition((x + (width*25))-25, y);
+    this->x = x;
+    this->y = y;
 }
 
 void Wall::setWallTexture(sf::Texture& texture)
@@ -48,14 +50,13 @@ void Wall::drawWall(sf::RenderWindow& window)
     window.draw(bottom);
     window.draw(right);
 }
-
-void Food::generateFood(unsigned short width, unsigned short length)
+void Food::generateFood(unsigned short width, unsigned short length, unsigned short xWall, unsigned short yWall)
 {
     unsigned short min = genRandom(1, (width - 2));
     unsigned short max = genRandom(1, (length - 2));
 
-    this->x = 25 * min;
-    this->y = 25 * max;
+    this->x = (25 * min) + xWall;
+    this->y = (25 * max) + yWall;
 
     food.setPosition(x , y);
 }
@@ -67,7 +68,7 @@ void Food::setFoodTexture(sf::Texture& texture)
 
 Snake::Snake()
 {
-    body = new Node[200];
+    body = new Node[500];
     log("Snake Created",debugMode);
 }
 
@@ -135,6 +136,11 @@ void Snake::dpad(void)
 
 void Snake::drawSnake(sf::RenderWindow& window)
 {
+    /* if (lastMove == null)
+    {
+        head.prevNodes = sf::Vector2f(175.f, 200.f);
+    } */
+
     body[0].nextNodes = &head.prevNodes;
     body[0].nodeRect.setPosition(*body[0].nextNodes);
 
@@ -146,13 +152,13 @@ void Snake::drawSnake(sf::RenderWindow& window)
 
     /*SETTING SNAKE TEXTURES HERE IS NOT FINAL*/
     head.nodeRect.setTexture(&headTEX);
-
+    
     for (unsigned short i = 0; i < snakeSize; i++)
     {
         body[i].nodeRect.setTexture(&bodyTEX);
         window.draw(body[i].nodeRect);
     }
-    
+
     window.draw(head.nodeRect);
 }
 

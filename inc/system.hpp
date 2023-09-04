@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <string>
 #include <ctime>
+#include <stdio.h>
 #include "ColorEscape.hpp"
 
 extern bool debugMode;
