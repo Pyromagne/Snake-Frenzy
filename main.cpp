@@ -3,7 +3,7 @@
 #include "inc/game.hpp"
 #include "inc/gui.hpp"
 
-bool debugMode = true;
+bool debugMode = false;
 sf::Font defaultFont;
 
 int main()
