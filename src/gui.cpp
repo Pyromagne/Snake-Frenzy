@@ -10,13 +10,13 @@ void mainMenuUI(sf::RenderWindow& window)
 
     sf::Text titleTXT;
     titleTXT.setFont(simpleSquareFNT);
-    titleTXT.setFillColor(sf::Color::Yellow);
+    titleTXT.setFillColor(sf::Color(45, 226, 230));
     titleTXT.setString("Snake: Frenzy");
     titleTXT.setCharacterSize(50.f);
     titleTXT.setPosition(sf::Vector2f(100.f, 50));
 
     RectButton playBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 300.f));
-    playBTN.setLabelColor(sf::Color::White, sf::Color::Green, sf::Color::Green);
+    playBTN.setLabelColor(sf::Color::White, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
     playBTN.setButtonColor(sf::Color::Transparent);
     playBTN.setButtonLabel(40.f, "Classic");
 
@@ -26,7 +26,7 @@ void mainMenuUI(sf::RenderWindow& window)
     exitBTN.setButtonLabel(40.f, "Exit");
 
     RectButton authorBTN(simpleSquareFNT, true, sf::Vector2f(1000.f, 640.f));
-    authorBTN.setLabelColor(sf::Color(240, 67, 14), sf::Color(168, 50, 13), sf::Color(168, 50, 13));
+    authorBTN.setLabelColor(sf::Color(246, 1, 157), sf::Color(212, 0, 120), sf::Color(212, 0, 120));
     authorBTN.setButtonColor(sf::Color::Transparent);
     authorBTN.setButtonLabel(30.f, "Pyromagne");
 
@@ -35,7 +35,7 @@ void mainMenuUI(sf::RenderWindow& window)
     backgroundTEX.setRepeated(true);
 
     sf::Sprite backgroundSPR(backgroundTEX);
-    backgroundSPR.setTextureRect(sf::IntRect(0, 0, 1280, 800));
+    backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
 
     sf::Event event;
     //temporary fix the visual bug in buttons
@@ -99,11 +99,11 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     if(isPressed)
     {
         sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("backgroundTile.png");
+        backgroundTEX.loadFromFile("backgroundGame.png");
         backgroundTEX.setRepeated(true);
 
         sf::Sprite backgroundSPR(backgroundTEX);
-        backgroundSPR.setTextureRect(sf::IntRect(0, 0, 1280, 800));
+        backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
 
         sf::Font simpleSquareFNT;
         simpleSquareFNT.loadFromFile("ST-SimpleSquare.otf");
@@ -147,7 +147,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         foodTEX.loadFromFile("food.png");
         food.setFoodTexture(foodTEX);
 
-        
+
 
         // Start the game loop
         while (window.isOpen())
@@ -176,7 +176,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                         pause = false;
                     }
                 }
-                
+
             }
 
 
@@ -224,7 +224,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                     food.generateFood(snake->wall.width, snake->wall.length, snake->wall.x, snake->wall.y);
                     snake->snakeSize++;
                     log("Food eaten",debugMode);
-                    score = score + 100;
+                    score = score + 10;
                     log("Score: " + std::to_string(score),debugMode);
                 }
                 if(snake->checkFoodHitBody(food))
@@ -241,12 +241,12 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                 drawPause(window);
             }
             if (gameOver == true)
-            {   
+            {
                 drawGameOver(window, score);
                 window.display();
                 sf::sleep(sf::seconds(2.f));
                 delete snake;
-                mainMenuUI(window);   
+                mainMenuUI(window);
             }
 
 
@@ -261,7 +261,7 @@ void drawPause(sf::RenderWindow& window)
     defaultFont.loadFromFile("ST-SimpleSquare.otf");
     sf::RectangleShape overlayRect;
     overlayRect.setFillColor(sf::Color(0, 0, 0, 200));
-    overlayRect.setSize(sf::Vector2f(1280.f, 720.f));
+    overlayRect.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
 
     sf::Text pauseTXT;
     pauseTXT.setFont(defaultFont);
@@ -280,7 +280,7 @@ void drawGameOver(sf::RenderWindow& window, unsigned int score = 0)
     defaultFont.loadFromFile("ST-SimpleSquare.otf");
     sf::RectangleShape overlayRect;
     overlayRect.setFillColor(sf::Color(0, 0, 0, 200));
-    overlayRect.setSize(sf::Vector2f(1280.f, 720.f));
+    overlayRect.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
 
     sf::Text gameOverTXT;
     gameOverTXT.setFont(defaultFont);

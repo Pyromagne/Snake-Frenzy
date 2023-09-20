@@ -36,3 +36,12 @@ unsigned short genRandom(unsigned short min, unsigned short max)
 
     return randNum;
 }
+
+sf::Vector2i GetDesktopResolution(void)
+{
+    RECT desktop;
+    const HWND hDesktop = GetDesktopWindow();
+    GetWindowRect(hDesktop, &desktop);
+    
+    return sf::Vector2i(desktop.right, desktop.bottom);
+}

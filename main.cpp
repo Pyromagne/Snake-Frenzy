@@ -3,8 +3,9 @@
 #include "inc/game.hpp"
 #include "inc/gui.hpp"
 
-bool debugMode = false;
+bool debugMode = true;
 sf::Font defaultFont;
+sf::Vector2i resolution;
 
 int main()
 {
@@ -13,8 +14,9 @@ int main()
 
     log("Game Started",debugMode);
 
+    resolution = GetDesktopResolution();
     sf::RenderWindow window;
-    int videoMode = 1;
+    unsigned short int videoMode = 2;
 
     //defaultFont.loadFromFile("ST-SimpleSquare.otf");
 
@@ -33,6 +35,10 @@ int main()
     else if(videoMode == 4)
     {
         window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:10 */
+    }
+    else
+    {
+        window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close);
     }
 
     mainMenuUI(window);

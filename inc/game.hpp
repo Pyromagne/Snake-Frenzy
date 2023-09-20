@@ -5,6 +5,7 @@
 #include "system.hpp"
 
 extern sf::Font defaultFont;
+extern sf::Vector2i resolution;
 
 enum direction
 {
