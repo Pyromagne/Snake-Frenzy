@@ -20,29 +20,26 @@ int main()
 
     //defaultFont.loadFromFile("ST-SimpleSquare.otf");
 
-    if(videoMode == 1)
+    switch(videoMode)
     {
-        window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
-    }
-    else if(videoMode == 2)
-    {
-        window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:10 */
-    }
-    else if(videoMode == 3)
-    {
-        window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:9 */
-    }
-    else if(videoMode == 4)
-    {
-        window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:10 */
-    }
-    else
-    {
-        window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close);
+        case 1:
+            window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
+        break;
+        case 2:
+            window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:10 */
+        break;
+        case 3:
+            window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:9 */
+        break;
+        case 4:
+            window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:10 */
+        break;
+        default:
+            window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close);
+        break;
     }
 
     mainMenuUI(window);
-    //gameMenuUI(window, true);
 
     log("Game Exited",debugMode);
     return EXIT_SUCCESS;

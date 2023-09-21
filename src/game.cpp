@@ -11,28 +11,35 @@ Wall::Wall(int width, int length)
 {
     this->width = width;
     this->length = length;
+
+    plane.setTextureRect(sf::IntRect(0, 0, width * 25.f - 50.f, length * 25.f - 50.f));
+    
     top = sf::RectangleShape(sf::Vector2f(float(width*25), 25.f));
     left = sf::RectangleShape(sf::Vector2f(25.f, float(length*25)));
     bottom = sf::RectangleShape(sf::Vector2f(float(width*25), 25.f));
     right = sf::RectangleShape(sf::Vector2f(25.f, float(length*25)));
+
+}
+
+void Wall::setWallPosition(float x, float y)
+{
+    this->x = x;
+    this->y = y;
+
+    plane.setPosition(x + 25.f, y + 25.f);
+
+    top.setPosition(x, y);
+    left.setPosition(x, y);
+    bottom.setPosition(x, (y + (length*25))-25);
+    right.setPosition((x + (width*25))-25, y);
 }
 
 void Wall::setWallColor(sf::Color color)
 {
     top.setFillColor(color);
     left.setFillColor(color);
-    bottom.setFillColor(sf::Color::Blue);
-    right.setFillColor(sf::Color::Blue);
-}
-
-void Wall::setWallPosition(float x, float y)
-{
-    top.setPosition(x, y);
-    left.setPosition(x, y);
-    bottom.setPosition(x, (y + (length*25))-25);
-    right.setPosition((x + (width*25))-25, y);
-    this->x = x;
-    this->y = y;
+    bottom.setFillColor(color);
+    right.setFillColor(color);
 }
 
 void Wall::setWallTexture(sf::Texture& texture)
@@ -43,8 +50,20 @@ void Wall::setWallTexture(sf::Texture& texture)
     right.setTexture(&texture);
 }
 
+void Wall::setPlaneColor(sf::Color color)
+{
+    plane.setColor(color);
+}
+
+void Wall::setPlaneTexture(sf::Texture& texture)
+{
+    texture.setRepeated(true);
+    plane.setTexture(texture);
+}
+
 void Wall::drawWall(sf::RenderWindow& window)
 {
+    window.draw(plane);
     window.draw(top);
     window.draw(left);
     window.draw(bottom);
@@ -152,7 +171,7 @@ void Snake::drawSnake(sf::RenderWindow& window)
 
     /*SETTING SNAKE TEXTURES HERE IS NOT FINAL*/
     head.nodeRect.setTexture(&headTEX);
-    
+
     for (unsigned short i = 0; i < snakeSize; i++)
     {
         body[i].nodeRect.setTexture(&bodyTEX);

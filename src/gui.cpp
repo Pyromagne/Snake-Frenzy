@@ -161,6 +161,11 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
 
         snake->wall.setWallPosition(50.f, 50.f);
 
+        sf::Texture planeTEX;
+        planeTEX.loadFromFile("assets/texture/backgroundTile.png");
+        planeTEX.setRepeated(true);
+        snake->wall.setPlaneTexture(planeTEX);
+
         Food food;
         sf::Texture foodTEX;
         foodTEX.loadFromFile("assets/texture/food.png");

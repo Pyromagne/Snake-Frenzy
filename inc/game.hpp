@@ -33,14 +33,19 @@ struct Wall
     unsigned short length;
     unsigned short x;
     unsigned short y;
+
     sf::RectangleShape top;
     sf::RectangleShape bottom;
     sf::RectangleShape left;
     sf::RectangleShape right;
 
-    void setWallColor(sf::Color);
+    sf::Sprite plane;
+
     void setWallPosition(float x, float y);
+    void setWallColor(sf::Color);
     void setWallTexture(sf::Texture& texture);
+    void setPlaneColor(sf::Color);
+    void setPlaneTexture(sf::Texture& texture);
     void drawWall(sf::RenderWindow& window);
 };
 
