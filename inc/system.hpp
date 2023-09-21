@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "wtypes.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "ColorEscape.hpp"
 
 extern bool debugMode;

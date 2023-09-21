@@ -16,7 +16,7 @@ int main()
 
     resolution = GetDesktopResolution();
     sf::RenderWindow window;
-    unsigned short int videoMode = 2;
+    unsigned short int videoMode = 1;
 
     //defaultFont.loadFromFile("ST-SimpleSquare.otf");
 
@@ -38,7 +38,7 @@ int main()
     }
     else
     {
-        window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close);
+        window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close);
     }
 
     mainMenuUI(window);

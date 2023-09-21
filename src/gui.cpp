@@ -6,7 +6,7 @@ void mainMenuUI(sf::RenderWindow& window)
     window.setMouseCursorVisible(true);
     log("Initializing GUI",debugMode);
     sf::Font simpleSquareFNT;
-    simpleSquareFNT.loadFromFile("ST-SimpleSquare.otf");
+    simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
 
     sf::Text titleTXT;
     titleTXT.setFont(simpleSquareFNT);
@@ -31,7 +31,7 @@ void mainMenuUI(sf::RenderWindow& window)
     authorBTN.setButtonLabel(30.f, "Pyromagne");
 
     sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("backgroundTile.png");
+    backgroundTEX.loadFromFile("assets/texture/backgroundTile.png");
     backgroundTEX.setRepeated(true);
 
     sf::Sprite backgroundSPR(backgroundTEX);
@@ -43,6 +43,11 @@ void mainMenuUI(sf::RenderWindow& window)
         exitBTN.getButtonStatus(window, event);
         authorBTN.getButtonStatus(window, event);
     //temporary fix the visual bug in buttons
+
+    sf::Music MainMenuBGM;
+    MainMenuBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-07-The-Hidden-One.ogg");
+    MainMenuBGM.setLoop(true);
+    MainMenuBGM.play();
 
     // Start the game loop
     while (window.isOpen())
@@ -64,6 +69,7 @@ void mainMenuUI(sf::RenderWindow& window)
             }
             if (playBTN.isPressed)
             {
+                MainMenuBGM.stop();
                 gameClassicUI(window, true);
             }
             if (authorBTN.isPressed)
@@ -96,17 +102,30 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     bool gameOver = false;
     sf::Clock gameOverCLK;
 
+    sf::Music GameClassicBGM;
+    GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-09-Lightyear-City.ogg");
+    GameClassicBGM.setLoop(true);
+    GameClassicBGM.play();
+
+    sf::SoundBuffer foodEatSB;
+    foodEatSB.loadFromFile("assets/audio/Retro-Blop-07.wav");
+    sf::SoundBuffer snakeWallCollideSB;
+    snakeWallCollideSB.loadFromFile("assets/audio/Retro-Electronic-Burst-StereoUP-04.wav");
+
+    sf::Sound soundEffect;
+    soundEffect.setLoop(false);
+
     if(isPressed)
     {
         sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("backgroundGame.png");
+        backgroundTEX.loadFromFile("assets/texture/backgroundGame.png");
         backgroundTEX.setRepeated(true);
 
         sf::Sprite backgroundSPR(backgroundTEX);
         backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
 
         sf::Font simpleSquareFNT;
-        simpleSquareFNT.loadFromFile("ST-SimpleSquare.otf");
+        simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
 
         sf::Text modeTitleTXT;
         modeTitleTXT.setFont(simpleSquareFNT);
@@ -129,22 +148,22 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         scoreTXT.setPosition(sf::Vector2f(1120.f, 120.f));
 
         Snake *snake = new Snake(500,1);
-        snake->headTEX.loadFromFile("snakeHead.png");
-        snake->bodyTEX.loadFromFile("snakeSkin.png");
+        snake->headTEX.loadFromFile("assets/texture/snakeHead.png");
+        snake->bodyTEX.loadFromFile("assets/texture/snakeSkin.png");
 
         snake->head.nodeRect.setPosition(200.f, 200.f);
         snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
 
         sf::Texture wallTEX;
-        wallTEX.loadFromFile("wall.png");
+        wallTEX.loadFromFile("assets/texture/wall.png");
         snake->wall.setWallTexture(wallTEX);
 
         snake->wall.setWallPosition(50.f, 50.f);
 
         Food food;
         sf::Texture foodTEX;
-        foodTEX.loadFromFile("food.png");
+        foodTEX.loadFromFile("assets/texture/food.png");
         food.setFoodTexture(foodTEX);
 
 
@@ -184,11 +203,15 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
             {
                 if(snake->checkSnakeCollision() == true)
                 {
+                    soundEffect.setBuffer(snakeWallCollideSB);
+                    soundEffect.play();
                     gameOver = true;
                 }
 
                 if(snake->checkWallHit() == true)
                 {
+                    soundEffect.setBuffer(snakeWallCollideSB);
+                    soundEffect.play();
                     gameOver = true;
                 }
 
@@ -221,6 +244,8 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                 }
                 if(snake->checkFoodCollision(food))
                 {
+                    soundEffect.setBuffer(foodEatSB);
+                    soundEffect.play();
                     food.generateFood(snake->wall.width, snake->wall.length, snake->wall.x, snake->wall.y);
                     snake->snakeSize++;
                     log("Food eaten",debugMode);
@@ -242,6 +267,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
             }
             if (gameOver == true)
             {
+                GameClassicBGM.stop();
                 drawGameOver(window, score);
                 window.display();
                 sf::sleep(sf::seconds(2.f));
@@ -258,7 +284,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
 
 void drawPause(sf::RenderWindow& window)
 {
-    defaultFont.loadFromFile("ST-SimpleSquare.otf");
+    defaultFont.loadFromFile("assets/font/ST-SimpleSquare.otf");
     sf::RectangleShape overlayRect;
     overlayRect.setFillColor(sf::Color(0, 0, 0, 200));
     overlayRect.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
@@ -277,7 +303,7 @@ void drawPause(sf::RenderWindow& window)
 
 void drawGameOver(sf::RenderWindow& window, unsigned int score = 0)
 {
-    defaultFont.loadFromFile("ST-SimpleSquare.otf");
+    defaultFont.loadFromFile("assets/font/ST-SimpleSquare.otf");
     sf::RectangleShape overlayRect;
     overlayRect.setFillColor(sf::Color(0, 0, 0, 200));
     overlayRect.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
