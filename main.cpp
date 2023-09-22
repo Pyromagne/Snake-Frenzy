@@ -16,6 +16,8 @@ int main()
 
     resolution = GetDesktopResolution();
     sf::RenderWindow window;
+    window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(60);
     unsigned short int videoMode = 1;
 
     //defaultFont.loadFromFile("ST-SimpleSquare.otf");

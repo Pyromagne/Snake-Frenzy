@@ -49,6 +49,14 @@ void mainMenuUI(sf::RenderWindow& window)
     MainMenuBGM.setLoop(true);
     MainMenuBGM.play();
 
+    sf::SoundBuffer selectHoverSB;
+    selectHoverSB.loadFromFile("assets/audio/Retro-Blip-07.wav");
+    sf::SoundBuffer selectClickedSB;
+    selectClickedSB.loadFromFile("assets/audio/Retro-Blip-15.wav");
+
+    sf::Sound soundEffect;
+    soundEffect.setLoop(false);
+
     // Start the game loop
     while (window.isOpen())
     {
@@ -63,17 +71,30 @@ void mainMenuUI(sf::RenderWindow& window)
             {
                 window.close();
             }
+            //HOVER FUNCTION OF SFML BUTTON LIBRARY MUST BE CHANGE
+            /* if (exitBTN.isHover || playBTN.isHover || authorBTN.isHover)
+            {
+                soundEffect.setBuffer(selectHoverSB);
+                soundEffect.play();
+            } */
             if (exitBTN.isPressed)
             {
+                soundEffect.setBuffer(selectClickedSB);
+                soundEffect.play();
+                sf::sleep(sf::seconds(0.5f));
                 window.close();
             }
             if (playBTN.isPressed)
             {
+                soundEffect.setBuffer(selectClickedSB);
+                soundEffect.play();
                 MainMenuBGM.stop();
                 gameClassicUI(window, true);
             }
             if (authorBTN.isPressed)
             {
+                soundEffect.setBuffer(selectClickedSB);
+                soundEffect.play();
                 system("start https://pyromagne.itch.io/");
             }
         }
