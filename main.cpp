@@ -8,7 +8,7 @@ sf::Font defaultFont;
 sf::Vector2i resolution;
 sf::Vector2f snakeSize(25.f, 25.f);
 
-//TEST GPG SIGN IN GIT
+//TEST GPG SIGN IN GIT a1
 
 int main(int argc, char* argv[])
 {
