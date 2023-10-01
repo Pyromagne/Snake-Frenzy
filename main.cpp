@@ -6,8 +6,9 @@
 bool debugMode = true;
 sf::Font defaultFont;
 sf::Vector2i resolution;
+sf::Vector2f snakeSize(25.f, 25.f);
 
-int main()
+int main(int argc, char* argv[])
 {
     enable_vtp();
     srand(time(0));
@@ -18,27 +19,37 @@ int main()
     sf::RenderWindow window;
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
-    unsigned short int videoMode = 1;
-
     //defaultFont.loadFromFile("ST-SimpleSquare.otf");
 
-    switch(videoMode)
+     if (argc >= 2)
+     {
+        unsigned short videoMode = std::atoi(argv[1]);
+        videoMode = 1;
+        switch(videoMode)
+        {
+            case 1:
+                window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
+            break;
+            case 2:
+                window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:10 */
+            break;
+            case 3:
+                window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:9 */
+            break;
+            case 4:
+                window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:10 */
+            break;
+            case 5:
+                window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close);
+            break;
+            default:
+                window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
+            break;
+        }
+    }
+    else
     {
-        case 1:
-            window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
-        break;
-        case 2:
-            window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:10 */
-        break;
-        case 3:
-            window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:9 */
-        break;
-        case 4:
-            window.create(sf::VideoMode(1280, 800), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close); /* 16:10 */
-        break;
-        default:
-            window.create(sf::VideoMode(resolution.x, resolution.y), "Snake: Frenzy", sf::Style::Fullscreen | sf::Style::Close);
-        break;
+        window.create(sf::VideoMode(1280, 720), "Snake: Frenzy", sf::Style::Titlebar | sf::Style::Close); /* 16:9 */
     }
 
     mainMenuUI(window);

@@ -13,6 +13,7 @@
 #include "ColorEscape.hpp"
 
 extern bool debugMode;
+extern sf::Vector2f snakeSize;
 
 void log(std::string log, bool debugMode);
 void err(std::string err, bool debugMode);

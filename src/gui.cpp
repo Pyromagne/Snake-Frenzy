@@ -25,13 +25,13 @@ void mainMenuUI(sf::RenderWindow& window)
     exitBTN.setButtonColor(sf::Color::Transparent);
     exitBTN.setButtonLabel(40.f, "Exit");
 
-    RectButton authorBTN(simpleSquareFNT, true, sf::Vector2f(1000.f, 640.f));
+    RectButton authorBTN(simpleSquareFNT, true, sf::Vector2f(window.getSize().x - 275, window.getSize().y - 75));
     authorBTN.setLabelColor(sf::Color(246, 1, 157), sf::Color(212, 0, 120), sf::Color(212, 0, 120));
     authorBTN.setButtonColor(sf::Color::Transparent);
     authorBTN.setButtonLabel(30.f, "Pyromagne");
 
     sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("assets/texture/backgroundTile.png");
+    backgroundTEX.loadFromFile("assets/image/backgroundSW.png");
     backgroundTEX.setRepeated(true);
 
     sf::Sprite backgroundSPR(backgroundTEX);
@@ -139,7 +139,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     if(isPressed)
     {
         sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("assets/texture/backgroundGame.png");
+        backgroundTEX.loadFromFile("assets/image/backgroundGame.png");
         backgroundTEX.setRepeated(true);
 
         sf::Sprite backgroundSPR(backgroundTEX);
@@ -168,28 +168,36 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         scoreTXT.setCharacterSize(30.f);
         scoreTXT.setPosition(sf::Vector2f(1120.f, 120.f));
 
-        Snake *snake = new Snake(500,1);
-        snake->headTEX.loadFromFile("assets/texture/snakeHead.png");
-        snake->bodyTEX.loadFromFile("assets/texture/snakeSkin.png");
+        Snake *snake = new Snake(500, 1, 25.f);
 
-        snake->head.nodeRect.setPosition(200.f, 200.f);
+        sf::Texture headTEX;
+        sf::Texture bodyTEX;
+
+        headTEX.loadFromFile("assets/image/snakeHead.png");
+        bodyTEX.loadFromFile("assets/image/snakeSkin.png");
+
+        snake->setSnakeTexture(headTEX, bodyTEX);
+
+        Wall wall(window.getSize().x / snakeSize.x - 5, window.getSize().y / snakeSize.y - 5, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+        sf::Texture wallTEX;
+        wallTEX.loadFromFile("assets/image/wall.png");
+        wall.setWallTexture(wallTEX);
+
+        float center;
+        center = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
+        wall.setWallPosition(center, 25.f);
+
+        snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
         snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
-
-        sf::Texture wallTEX;
-        wallTEX.loadFromFile("assets/texture/wall.png");
-        snake->wall.setWallTexture(wallTEX);
-
-        snake->wall.setWallPosition(50.f, 50.f);
-
         sf::Texture planeTEX;
-        planeTEX.loadFromFile("assets/texture/backgroundTile.png");
+        planeTEX.loadFromFile("assets/image/backgroundTile.png");
         planeTEX.setRepeated(true);
-        snake->wall.setPlaneTexture(planeTEX);
+        wall.setPlaneTexture(planeTEX);
 
-        Food food;
+        Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
         sf::Texture foodTEX;
-        foodTEX.loadFromFile("assets/texture/food.png");
+        foodTEX.loadFromFile("assets/image/food.png");
         food.setFoodTexture(foodTEX);
 
 
@@ -234,7 +242,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                     gameOver = true;
                 }
 
-                if(snake->checkWallHit() == true)
+                if(snake->checkWallHit(wall) == true)
                 {
                     soundEffect.setBuffer(snakeWallCollideSB);
                     soundEffect.play();
@@ -254,7 +262,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
             // Draw the sprite
             window.draw(backgroundSPR);
 
-            snake->wall.drawWall(window);
+            wall.drawWall(window);
             snake->drawSnake(window);
 
             window.draw(modeTitleTXT);
@@ -266,13 +274,13 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
             /* TEMPORARY PLACE */
                 if(food.x == 0 && food.y == 0)
                 {
-                    food.generateFood(snake->wall.width, snake->wall.length, snake->wall.x, snake->wall.y);
+                    food.generateFood(wall.width, wall.length, wall.x, wall.y);
                 }
                 if(snake->checkFoodCollision(food))
                 {
                     soundEffect.setBuffer(foodEatSB);
                     soundEffect.play();
-                    food.generateFood(snake->wall.width, snake->wall.length, snake->wall.x, snake->wall.y);
+                    food.generateFood(wall.width, wall.length, wall.x, wall.y);
                     snake->snakeSize++;
                     log("Food eaten",debugMode);
                     score = score + 10;
@@ -280,12 +288,12 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                 }
                 if(snake->checkFoodHitBody(food))
                 {
-                    food.generateFood(snake->wall.width, snake->wall.length, snake->wall.x, snake->wall.y);
+                    food.generateFood(wall.width, wall.length, wall.x, wall.y);
                     log("Food spawned in body position, generate new food",debugMode);
                 }
             /* TEMPORARY PLACE */
 
-            window.draw(food.food);
+            window.draw(food.rect);
 
             if(pause == true)
             {
@@ -321,7 +329,10 @@ void drawPause(sf::RenderWindow& window)
     pauseTXT.setString("Press [Space] to Continue");
     pauseTXT.setCharacterSize(50.f);
 
-    pauseTXT.setPosition(sf::Vector2f(180.f, float(720 /2)));
+    pauseTXT.setPosition(sf::Vector2f(
+        (window.getSize().x / 2) - (pauseTXT.getLocalBounds().width / 2),
+        (window.getSize().y / 2) - (pauseTXT.getLocalBounds().height / 2)
+    ));
 
     window.draw(overlayRect);
     window.draw(pauseTXT);
@@ -339,14 +350,20 @@ void drawGameOver(sf::RenderWindow& window, unsigned int score = 0)
     gameOverTXT.setFillColor(sf::Color::Red);
     gameOverTXT.setString("Game Over");
     gameOverTXT.setCharacterSize(100.f);
-    gameOverTXT.setPosition(sf::Vector2f(300.f, 290.f));
+    gameOverTXT.setPosition(sf::Vector2f(
+        (window.getSize().x / 2) - (gameOverTXT.getLocalBounds().width / 2),
+        (window.getSize().y / 2) - (gameOverTXT.getLocalBounds().height / 2)
+    ));
 
     sf::Text scoreTXT;
     scoreTXT.setFont(defaultFont);
     scoreTXT.setFillColor(sf::Color::White);
     scoreTXT.setString("Score: " + std::to_string(score));
     scoreTXT.setCharacterSize(50.f);
-    scoreTXT.setPosition(sf::Vector2f(300.f, 400.f));
+    scoreTXT.setPosition(sf::Vector2f(
+        (window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2),
+        (window.getSize().y / 2) - (scoreTXT.getLocalBounds().height / 2) + 100
+    ));
 
 
     window.draw(overlayRect);

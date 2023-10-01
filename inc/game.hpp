@@ -16,28 +16,33 @@ enum direction
     down = 4
 };
 
-struct Node
+class Node
 {
-    Node();
-    sf::RectangleShape nodeRect = sf::RectangleShape(sf::Vector2f(25.f,25.f));
+    public:
+    Node(); // implement initialization list in the future for nodeRect like in the class Food
+    sf::RectangleShape nodeRect = sf::RectangleShape(sf::Vector2f(25, 25));
     sf::Vector2f* nextNodes;
     sf::Vector2f prevNodes;
+    float nodeSize = 25.f;
     sf::Vector2i gridPosition; /* For future features make a position map in grid*/ /* Not yet use */
+
 };
 
-struct Wall
+class Wall
 {
-    Wall(int width, int length);
+    public:
+    Wall(int width, int length, sf::RectangleShape sRect);
 
     unsigned short width;
     unsigned short length;
     unsigned short x;
     unsigned short y;
+    sf::Vector2f nodeSize;
 
-    sf::RectangleShape top;
-    sf::RectangleShape bottom;
-    sf::RectangleShape left;
-    sf::RectangleShape right;
+    sf::RectangleShape topRect;
+    sf::RectangleShape bottomRect;
+    sf::RectangleShape leftRect;
+    sf::RectangleShape rightRect;
 
     sf::Sprite plane;
 
@@ -50,11 +55,15 @@ struct Wall
 };
 
 class Food
-{
+{  
     public:
+
+        Food(sf::RectangleShape sRect);
+
+        sf::Vector2f nodeSize; //
         unsigned short x = 0;
         unsigned short y = 0;
-        sf::RectangleShape food = sf::RectangleShape(sf::Vector2f(25.f,25.f));
+        sf::RectangleShape rect;
 
         void generateFood(unsigned short width, unsigned short length, unsigned short xWall = 0, unsigned short yWall = 0);
         void setFoodTexture(sf::Texture& texture);
@@ -65,11 +74,12 @@ class Snake
 {
     public:
         Snake();
-        Snake(unsigned int maxSnakeSize);
-        Snake(unsigned int maxSnakeSize, unsigned int snakeSize);
+        Snake(unsigned int maxSnake, float nodeSize);
+        Snake(unsigned int maxSnakeSize, unsigned int snakeSize, float nodeSize);
         ~Snake();
 
         unsigned int snakeSize = 10;
+        float nodeSize;
         direction lastMove = null;
         direction lastMove2 = null;
         sf::Clock updatePositionCLK;
@@ -77,13 +87,14 @@ class Snake
         sf::Texture bodyTEX;
         Node head;
         Node* body = nullptr;
-        Wall wall = Wall(36,25); /* max value of wall is calculated by dividing resolution by snakeSize */ /* adding wall to the SnakeClass is not final it can be independent object */
+        //Wall wall = Wall(36,25); /* max value of wall is calculated by dividing resolution by snakeSize */ /* adding wall to the SnakeClass is not final it can be independent object */
 
         void dpad(void);
         void drawSnake(sf::RenderWindow& window);
         void updatePosition(float speed);
+        void setSnakeTexture(sf::Texture& headTEX, sf::Texture& bodyTEX);
         bool checkSnakeCollision(void);
-        bool checkWallHit(void);
+        bool checkWallHit(Wall& wall);
         bool checkFoodCollision(Food& food);
         bool checkFoodHitBody(Food& food);
     //end of public

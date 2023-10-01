@@ -7,17 +7,19 @@ Node::Node()
     nodeRect.setFillColor(sf::Color::White);
 }
 
-Wall::Wall(int width, int length)
+Wall::Wall(int width, int length, sf::RectangleShape sRect) : topRect(sRect), bottomRect(sRect), leftRect(sRect), rightRect(sRect)
 {
     this->width = width;
     this->length = length;
+    this->nodeSize.x  = sRect.getSize().x;
+    this->nodeSize.y  = sRect.getSize().y;
 
-    plane.setTextureRect(sf::IntRect(0, 0, width * 25.f - 50.f, length * 25.f - 50.f));
+    plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
     
-    top = sf::RectangleShape(sf::Vector2f(float(width*25), 25.f));
-    left = sf::RectangleShape(sf::Vector2f(25.f, float(length*25)));
-    bottom = sf::RectangleShape(sf::Vector2f(float(width*25), 25.f));
-    right = sf::RectangleShape(sf::Vector2f(25.f, float(length*25)));
+    topRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
+    leftRect = sf::RectangleShape(sf::Vector2f(nodeSize.x, float(length * nodeSize.y)));
+    bottomRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
+    rightRect = sf::RectangleShape(sf::Vector2f(nodeSize.x, float(length * nodeSize.y)));
 
 }
 
@@ -26,28 +28,28 @@ void Wall::setWallPosition(float x, float y)
     this->x = x;
     this->y = y;
 
-    plane.setPosition(x + 25.f, y + 25.f);
+    plane.setPosition(x + this->nodeSize.x, y + this->nodeSize.y);
 
-    top.setPosition(x, y);
-    left.setPosition(x, y);
-    bottom.setPosition(x, (y + (length*25))-25);
-    right.setPosition((x + (width*25))-25, y);
+    topRect.setPosition(x, y);
+    leftRect.setPosition(x, y);
+    bottomRect.setPosition(x, (y + (length * this->nodeSize.y)) - this->nodeSize.y);
+    rightRect.setPosition((x + (width * this->nodeSize.x)) - this->nodeSize.x, y);
 }
 
 void Wall::setWallColor(sf::Color color)
 {
-    top.setFillColor(color);
-    left.setFillColor(color);
-    bottom.setFillColor(color);
-    right.setFillColor(color);
+    topRect.setFillColor(color);
+    leftRect.setFillColor(color);
+    bottomRect.setFillColor(color);
+    rightRect.setFillColor(color);
 }
 
 void Wall::setWallTexture(sf::Texture& texture)
 {
-    top.setTexture(&texture);
-    bottom.setTexture(&texture);
-    left.setTexture(&texture);
-    right.setTexture(&texture);
+    topRect.setTexture(&texture);
+    bottomRect.setTexture(&texture);
+    leftRect.setTexture(&texture);
+    rightRect.setTexture(&texture);
 }
 
 void Wall::setPlaneColor(sf::Color color)
@@ -64,25 +66,34 @@ void Wall::setPlaneTexture(sf::Texture& texture)
 void Wall::drawWall(sf::RenderWindow& window)
 {
     window.draw(plane);
-    window.draw(top);
-    window.draw(left);
-    window.draw(bottom);
-    window.draw(right);
+    window.draw(topRect);
+    window.draw(leftRect);
+    window.draw(bottomRect);
+    window.draw(rightRect);
 }
+
+Food::Food(sf::RectangleShape sRect) : rect(sRect)
+{
+    nodeSize.x = rect.getSize().x;
+    nodeSize.y = rect.getSize().y;
+}
+
 void Food::generateFood(unsigned short width, unsigned short length, unsigned short xWall, unsigned short yWall)
 {
     unsigned short min = genRandom(1, (width - 2));
     unsigned short max = genRandom(1, (length - 2));
 
-    this->x = (25 * min) + xWall;
-    this->y = (25 * max) + yWall;
+    this->x = (nodeSize.x * min) + xWall;
+    this->y = (nodeSize.y * max) + yWall;
 
-    food.setPosition(x , y);
+    rect.setPosition(x , y);
 }
 
 void Food::setFoodTexture(sf::Texture& texture)
 {
-    food.setTexture(&texture);
+    texture.setRepeated(true);
+    rect.setTexture(&texture);
+    //food.setTextureRect(sf::IntRect(0,0,50,50));
 }
 
 Snake::Snake()
@@ -91,14 +102,16 @@ Snake::Snake()
     log("Snake Created",debugMode);
 }
 
-Snake::Snake(unsigned int maxSnakeSize)
+Snake::Snake(unsigned int maxSnakeSize, float nodeSize)
 {
+    this->nodeSize = nodeSize;
     body = new Node[maxSnakeSize];
     log("Snake Created",debugMode);
 }
 
-Snake::Snake(unsigned int maxSnakeSize, unsigned int snakeSize)
+Snake::Snake(unsigned int maxSnakeSize, unsigned int snakeSize, float nodeSize)
 {
+    this->nodeSize = nodeSize;
     body = new Node[maxSnakeSize];
     if(snakeSize > maxSnakeSize)
     {
@@ -194,28 +207,36 @@ void Snake::updatePosition(float speed = 100.f)
         sf::Vector2f currentPosition = head.nodeRect.getPosition();
         if (lastMove == left)
         {
-            currentPosition.x -= 25.f;
+            currentPosition.x -= nodeSize;
             head.nodeRect.setPosition(currentPosition);
         }
         else if (lastMove == right)
         {
-            currentPosition.x += 25.f;
+            currentPosition.x += nodeSize;
             head.nodeRect.setPosition(currentPosition);
         }
         else if (lastMove == up)
         {
-            currentPosition.y -= 25.f;
+            currentPosition.y -= nodeSize;
             head.nodeRect.setPosition(currentPosition);
         }
         else if (lastMove == down)
         {
-            currentPosition.y += 25.f ;
+            currentPosition.y += nodeSize;
             head.nodeRect.setPosition(currentPosition);
         }
         lastMove2 = lastMove;
 
         updatePositionCLK.restart();
     }
+}
+
+void Snake::setSnakeTexture(sf::Texture& headTEX, sf::Texture& bodyTEX)
+{
+    this->headTEX.setRepeated(true);
+    this->bodyTEX.setRepeated(true);
+    this->headTEX = headTEX;
+    this->bodyTEX = bodyTEX;
 }
 
 bool Snake::checkSnakeCollision()
@@ -231,21 +252,21 @@ bool Snake::checkSnakeCollision()
     return false;
 }
 
-bool Snake::checkWallHit()
+bool Snake::checkWallHit(Wall& wall)
 {
-    if (head.nodeRect.getGlobalBounds().intersects(wall.top.getGlobalBounds()))
+    if (head.nodeRect.getGlobalBounds().intersects(wall.topRect.getGlobalBounds()))
     {
         return true;
     }
-    if(head.nodeRect.getGlobalBounds().intersects(wall.left.getGlobalBounds()))
+    if(head.nodeRect.getGlobalBounds().intersects(wall.leftRect.getGlobalBounds()))
     {
         return true;
     }
-    if(head.nodeRect.getGlobalBounds().intersects(wall.bottom.getGlobalBounds()))
+    if(head.nodeRect.getGlobalBounds().intersects(wall.bottomRect.getGlobalBounds()))
     {
         return true;
     }
-    if(head.nodeRect.getGlobalBounds().intersects(wall.right.getGlobalBounds()))
+    if(head.nodeRect.getGlobalBounds().intersects(wall.rightRect.getGlobalBounds()))
     {
         return true;
     }
@@ -255,7 +276,7 @@ bool Snake::checkWallHit()
 
 bool Snake::checkFoodCollision(Food& food)
 {
-    if (head.nodeRect.getGlobalBounds().intersects(food.food.getGlobalBounds()))
+    if (head.nodeRect.getGlobalBounds().intersects(food.rect.getGlobalBounds()))
     {
         return true;
     }
@@ -267,7 +288,7 @@ bool Snake::checkFoodHitBody(Food& food)
     bool collide = false;
     for (unsigned short i = 0; i < snakeSize; i++)
     {
-        if (body[i].nodeRect.getGlobalBounds().intersects(food.food.getGlobalBounds()))
+        if (body[i].nodeRect.getGlobalBounds().intersects(food.rect.getGlobalBounds()))
         {
             collide = true;
         }
