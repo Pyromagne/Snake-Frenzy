@@ -14,8 +14,9 @@ Wall::Wall(int width, int length, sf::RectangleShape sRect) : topRect(sRect), bo
     this->nodeSize.x  = sRect.getSize().x;
     this->nodeSize.y  = sRect.getSize().y;
 
+    //plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x, length * nodeSize.y));
     plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
-    
+
     topRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
     leftRect = sf::RectangleShape(sf::Vector2f(nodeSize.x, float(length * nodeSize.y)));
     bottomRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
@@ -29,6 +30,7 @@ void Wall::setWallPosition(float x, float y)
     this->y = y;
 
     plane.setPosition(x + this->nodeSize.x, y + this->nodeSize.y);
+    //plane.setPosition(x , y);
 
     topRect.setPosition(x, y);
     leftRect.setPosition(x, y);

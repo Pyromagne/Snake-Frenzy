@@ -139,7 +139,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     if(isPressed)
     {
         sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("assets/image/backgroundGame.png");
+        backgroundTEX.loadFromFile("assets/image/backgroundGame2.png");
         backgroundTEX.setRepeated(true);
 
         sf::Sprite backgroundSPR(backgroundTEX);
@@ -148,25 +148,25 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         sf::Font simpleSquareFNT;
         simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
 
-        sf::Text modeTitleTXT;
+        /* sf::Text modeTitleTXT;
         modeTitleTXT.setFont(simpleSquareFNT);
         modeTitleTXT.setFillColor(sf::Color::White);
         modeTitleTXT.setString("Classic");
         modeTitleTXT.setCharacterSize(33.f);
-        modeTitleTXT.setPosition(sf::Vector2f(1020.f, 50.f));
+        modeTitleTXT.setPosition(sf::Vector2f(1020.f, 50.f)); */
 
-        sf::Text scoreLabelTXT;
+        /* sf::Text scoreLabelTXT;
         scoreLabelTXT.setFont(simpleSquareFNT);
         scoreLabelTXT.setFillColor(sf::Color::White);
         scoreLabelTXT.setString("Score:");
         scoreLabelTXT.setCharacterSize(30.f);
-        scoreLabelTXT.setPosition(sf::Vector2f(980.f, 120.f));
+        scoreLabelTXT.setPosition(sf::Vector2f(980.f, 120.f)); */
 
         sf::Text scoreTXT;
         scoreTXT.setFont(simpleSquareFNT);
         scoreTXT.setFillColor(sf::Color::White);
         scoreTXT.setCharacterSize(30.f);
-        scoreTXT.setPosition(sf::Vector2f(1120.f, 120.f));
+
 
         Snake *snake = new Snake(500, 1, 25.f);
 
@@ -178,20 +178,28 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
 
         snake->setSnakeTexture(headTEX, bodyTEX);
 
-        Wall wall(window.getSize().x / snakeSize.x - 5, window.getSize().y / snakeSize.y - 5, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-        sf::Texture wallTEX;
-        wallTEX.loadFromFile("assets/image/wall.png");
-        wall.setWallTexture(wallTEX);
+        /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+        /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
 
-        float center;
-        center = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
-        wall.setWallPosition(center, 25.f);
+        //Wall wall(window.getSize().x / snakeSize.x - 5, window.getSize().y / snakeSize.y - 5, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+        /* sf::Texture wallTEX;
+        wallTEX.loadFromFile("assets/image/wall.png");
+        wall.setWallTexture(wallTEX); */
+
+        wall.setWallColor(sf::Color::Transparent);
+
+        float centerX, centerY;
+        centerX = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
+        centerY = float((window.getSize().y / 2) - (wall.length / 2) * snakeSize.y);
+        wall.setWallPosition(centerX, centerY);
+
+        //wall.setWallPosition(0,0);
 
         snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
         snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
         sf::Texture planeTEX;
-        planeTEX.loadFromFile("assets/image/backgroundTile.png");
+        planeTEX.loadFromFile("assets/image/plane2.png");
         planeTEX.setRepeated(true);
         wall.setPlaneTexture(planeTEX);
 
@@ -265,10 +273,28 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
             wall.drawWall(window);
             snake->drawSnake(window);
 
-            window.draw(modeTitleTXT);
-            window.draw(scoreLabelTXT);
-
+            //window.draw(modeTitleTXT);
+            //window.draw(scoreLabelTXT);
             scoreTXT.setString(std::to_string(score));
+            if( snake->head.nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()) ||
+                food.rect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
+            {
+                scoreTXT.setFillColor(sf::Color(255,255,255,75));
+            }
+            else
+            {
+                scoreTXT.setFillColor(sf::Color::White);
+            }
+
+            for (unsigned int i = 0; i < snake->snakeSize; i++)
+            {
+                if(snake->body[i].nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
+                {
+                    scoreTXT.setFillColor(sf::Color(255,255,255,75));
+                }
+            }
+
+            scoreTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2), 50.f));
             window.draw(scoreTXT);
 
             /* TEMPORARY PLACE */
@@ -308,7 +334,6 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
                 delete snake;
                 mainMenuUI(window);
             }
-
 
             // Update the window
             window.display();
