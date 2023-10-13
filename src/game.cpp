@@ -95,7 +95,6 @@ void Food::setFoodTexture(sf::Texture& texture)
 {
     texture.setRepeated(true);
     rect.setTexture(&texture);
-    //food.setTextureRect(sf::IntRect(0,0,50,50));
 }
 
 Snake::Snake()

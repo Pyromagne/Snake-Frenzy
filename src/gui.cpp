@@ -139,7 +139,7 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     if(isPressed)
     {
         sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("assets/image/backgroundGame2.png");
+        backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
         backgroundTEX.setRepeated(true);
 
         sf::Sprite backgroundSPR(backgroundTEX);
@@ -173,8 +173,8 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         sf::Texture headTEX;
         sf::Texture bodyTEX;
 
-        headTEX.loadFromFile("assets/image/snakeHead.png");
-        bodyTEX.loadFromFile("assets/image/snakeSkin.png");
+        headTEX.loadFromFile("assets/image/snakeHead2.png");
+        bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
 
         snake->setSnakeTexture(headTEX, bodyTEX);
 
@@ -199,13 +199,13 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
         sf::Texture planeTEX;
-        planeTEX.loadFromFile("assets/image/plane2.png");
+        planeTEX.loadFromFile("assets/image/plane3.png");
         planeTEX.setRepeated(true);
         wall.setPlaneTexture(planeTEX);
 
         Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
         sf::Texture foodTEX;
-        foodTEX.loadFromFile("assets/image/food.png");
+        foodTEX.loadFromFile("assets/image/food2.png");
         food.setFoodTexture(foodTEX);
 
 
