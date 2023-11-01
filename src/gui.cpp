@@ -48,7 +48,7 @@ void mainMenuUI(sf::RenderWindow& window)
         arcadeModeBTN.getButtonStatus(window, event);
         exitBTN.getButtonStatus(window, event);
         authorBTN.getButtonStatus(window, event);
-    //temporary fix the visual bug in buttons
+    //temporary fix the visual bug in buttons 
 
     sf::Music MainMenuBGM;
     MainMenuBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-07-The-Hidden-One.ogg");
@@ -182,8 +182,8 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
         scoreTXT.setFillColor(sf::Color::White);
         scoreTXT.setCharacterSize(30.f);
 
-
-        Snake *snake = new Snake(500, 1, 25.f);
+        short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
+        Snake *snake = new Snake(area, 1, 25.f);
 
         sf::Texture headTEX;
         sf::Texture bodyTEX;
@@ -356,8 +356,76 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     }
 }
 
-void gameArcadeUI(sf::RenderWindow& window, bool isPressed)
+void gameArcadeUI(sf::RenderWindow& window)
 {
+    window.setMouseCursorVisible(false);
+    unsigned int score = 0;
+    bool pause = false;
+    bool gameOver = false;
+    sf::Clock gameOverCLK;
+
+    sf::Music GameClassicBGM;
+    GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-09-Lightyear-City.ogg");
+    GameClassicBGM.setLoop(true);
+    GameClassicBGM.play();
+
+    sf::SoundBuffer foodEatSB;
+    foodEatSB.loadFromFile("assets/audio/Retro-Blop-07.wav");
+    sf::SoundBuffer snakeWallCollideSB;
+    snakeWallCollideSB.loadFromFile("assets/audio/Retro-Electronic-Burst-StereoUP-04.wav");
+
+    sf::Sound soundEffect;
+    soundEffect.setLoop(false);
+
+    sf::Texture backgroundTEX;
+    backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
+    backgroundTEX.setRepeated(true);
+
+    sf::Sprite backgroundSPR(backgroundTEX);
+    backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
+
+    sf::Font simpleSquareFNT;
+    simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
+
+    sf::Text scoreTXT;
+    scoreTXT.setFont(simpleSquareFNT);
+    scoreTXT.setFillColor(sf::Color::White);
+    scoreTXT.setCharacterSize(30.f);
+
+    short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
+    Snake *snake = new Snake(area, 1, 25.f);
+
+    sf::Texture headTEX;
+    sf::Texture bodyTEX;
+
+    headTEX.loadFromFile("assets/image/snakeHead2.png");
+    bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
+
+    snake->setSnakeTexture(headTEX, bodyTEX);
+
+    /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+
+    wall.setWallColor(sf::Color::Transparent);
+
+    float centerX, centerY;
+    centerX = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
+    centerY = float((window.getSize().y / 2) - (wall.length / 2) * snakeSize.y);
+    wall.setWallPosition(centerX, centerY);
+
+    sf::Texture planeTEX;
+    planeTEX.loadFromFile("assets/image/plane3.png");
+    planeTEX.setRepeated(true);
+    wall.setPlaneTexture(planeTEX);
+
+    snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
+    snake->body[0].nodeRect.setPosition(175.f, 200.f);
+
+    Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    sf::Texture foodTEX;
+    foodTEX.loadFromFile("assets/image/food2.png");
+    food.setFoodTexture(foodTEX);
+
     while (window.isOpen())
     {   
         sf::Event event;
