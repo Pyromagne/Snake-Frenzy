@@ -3,12 +3,12 @@
 #include "inc/game.hpp"
 #include "inc/gui.hpp"
 
-bool debugMode = true;
-sf::Font defaultFont;
-sf::Vector2i resolution;
-sf::Vector2f snakeSize(25.f, 25.f);
-
-//TEST GPG SIGN IN GIT a3
+//Global Variable
+    bool debugMode = true;
+    sf::Font defaultFont;
+    sf::Vector2i resolution;
+    sf::Vector2f snakeSize(25.f, 25.f);
+//end
 
 int main(int argc, char* argv[])
 {
@@ -60,4 +60,4 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 }
 
-//memory issue fixed but flow of the game must be improved
+//memory issue fixed but flow of the game must be improve

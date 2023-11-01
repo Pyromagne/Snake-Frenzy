@@ -15,12 +15,17 @@ void mainMenuUI(sf::RenderWindow& window)
     titleTXT.setCharacterSize(50.f);
     titleTXT.setPosition(sf::Vector2f(100.f, 50));
 
-    RectButton playBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 300.f));
-    playBTN.setLabelColor(sf::Color::White, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
-    playBTN.setButtonColor(sf::Color::Transparent);
-    playBTN.setButtonLabel(40.f, "Classic");
+    RectButton classicModeBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 300.f));
+    classicModeBTN.setLabelColor(sf::Color::White, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
+    classicModeBTN.setButtonColor(sf::Color::Transparent);
+    classicModeBTN.setButtonLabel(40.f, "Classic");
 
-    RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 400.f));
+    RectButton arcadeModeBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 400.f));
+    arcadeModeBTN.setLabelColor(sf::Color::White, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
+    arcadeModeBTN.setButtonColor(sf::Color::Transparent);
+    arcadeModeBTN.setButtonLabel(40.f, "Arcade");
+
+    RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 500.f));
     exitBTN.setLabelColor(sf::Color::White, sf::Color::Red, sf::Color::Red);
     exitBTN.setButtonColor(sf::Color::Transparent);
     exitBTN.setButtonLabel(40.f, "Exit");
@@ -39,7 +44,8 @@ void mainMenuUI(sf::RenderWindow& window)
 
     sf::Event event;
     //temporary fix the visual bug in buttons
-        playBTN.getButtonStatus(window, event);
+        classicModeBTN.getButtonStatus(window, event);
+        arcadeModeBTN.getButtonStatus(window, event);
         exitBTN.getButtonStatus(window, event);
         authorBTN.getButtonStatus(window, event);
     //temporary fix the visual bug in buttons
@@ -63,7 +69,8 @@ void mainMenuUI(sf::RenderWindow& window)
         // Process events
         while (window.pollEvent(event))
         {
-            playBTN.getButtonStatus(window, event);
+            classicModeBTN.getButtonStatus(window, event);
+            arcadeModeBTN.getButtonStatus(window, event);
             exitBTN.getButtonStatus(window, event);
             authorBTN.getButtonStatus(window, event);
 
@@ -84,12 +91,19 @@ void mainMenuUI(sf::RenderWindow& window)
                 sf::sleep(sf::seconds(0.5f));
                 window.close();
             }
-            if (playBTN.isPressed)
+            if (classicModeBTN.isPressed)
             {
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
                 MainMenuBGM.stop();
                 gameClassicUI(window, true);
+            }
+            if (arcadeModeBTN.isPressed)
+            {
+                soundEffect.setBuffer(selectClickedSB);
+                soundEffect.play();
+                MainMenuBGM.stop();
+                //gameClassicUI(window, true);
             }
             if (authorBTN.isPressed)
             {
@@ -105,7 +119,8 @@ void mainMenuUI(sf::RenderWindow& window)
         // Draw the sprite
         window.draw(backgroundSPR);
 
-        playBTN.draw(window);
+        classicModeBTN.draw(window);
+        arcadeModeBTN.draw(window);
         exitBTN.draw(window);
         authorBTN.draw(window);
         window.draw(titleTXT);
@@ -338,6 +353,34 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
             // Update the window
             window.display();
         }
+    }
+}
+
+void gameArcadeUI(sf::RenderWindow& window, bool isPressed)
+{
+    while (window.isOpen())
+    {   
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            //sampleBTN.getButtonStatus(window, event);
+
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+            
+
+        }
+
+        // Clear screen
+        window.clear();
+
+        // Draw the sprite
+        //sampleBTN.draw(window);
+
+        // Update the window
+        window.display();
     }
 }
 
