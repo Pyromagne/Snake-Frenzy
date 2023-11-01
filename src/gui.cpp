@@ -96,14 +96,14 @@ void mainMenuUI(sf::RenderWindow& window)
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
                 MainMenuBGM.stop();
-                gameClassicUI(window, true);
+                gameClassicMode(window);
             }
             if (arcadeModeBTN.isPressed)
             {
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
                 MainMenuBGM.stop();
-                //gameClassicUI(window, true);
+                gameArcadeMode(window);
             }
             if (authorBTN.isPressed)
             {
@@ -130,7 +130,7 @@ void mainMenuUI(sf::RenderWindow& window)
     }
 }
 
-void gameClassicUI(sf::RenderWindow& window, bool isPressed)
+void gameClassicMode(sf::RenderWindow& window)
 {
     window.setMouseCursorVisible(false);
     unsigned int score = 0;
@@ -151,212 +151,210 @@ void gameClassicUI(sf::RenderWindow& window, bool isPressed)
     sf::Sound soundEffect;
     soundEffect.setLoop(false);
 
-    if(isPressed)
+    sf::Texture backgroundTEX;
+    backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
+    backgroundTEX.setRepeated(true);
+
+    sf::Sprite backgroundSPR(backgroundTEX);
+    backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
+
+    sf::Font simpleSquareFNT;
+    simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
+
+    /* sf::Text modeTitleTXT;
+    modeTitleTXT.setFont(simpleSquareFNT);
+    modeTitleTXT.setFillColor(sf::Color::White);
+    modeTitleTXT.setString("Classic");
+    modeTitleTXT.setCharacterSize(33.f);
+    modeTitleTXT.setPosition(sf::Vector2f(1020.f, 50.f)); */
+
+    /* sf::Text scoreLabelTXT;
+    scoreLabelTXT.setFont(simpleSquareFNT);
+    scoreLabelTXT.setFillColor(sf::Color::White);
+    scoreLabelTXT.setString("Score:");
+    scoreLabelTXT.setCharacterSize(30.f);
+    scoreLabelTXT.setPosition(sf::Vector2f(980.f, 120.f)); */
+
+    sf::Text scoreTXT;
+    scoreTXT.setFont(simpleSquareFNT);
+    scoreTXT.setFillColor(sf::Color::White);
+    scoreTXT.setCharacterSize(30.f);
+
+    short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
+    Snake *snake = new Snake(area, 1, 25.f);
+
+    sf::Texture headTEX;
+    sf::Texture bodyTEX;
+
+    headTEX.loadFromFile("assets/image/snakeHead2.png");
+    bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
+
+    snake->setSnakeTexture(headTEX, bodyTEX);
+
+    /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+
+    //Wall wall(window.getSize().x / snakeSize.x - 5, window.getSize().y / snakeSize.y - 5, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    /* sf::Texture wallTEX;
+    wallTEX.loadFromFile("assets/image/wall.png");
+    wall.setWallTexture(wallTEX); */
+
+    wall.setWallColor(sf::Color::Transparent);
+
+    float centerX, centerY;
+    centerX = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
+    centerY = float((window.getSize().y / 2) - (wall.length / 2) * snakeSize.y);
+    wall.setWallPosition(centerX, centerY);
+
+    //wall.setWallPosition(0,0);
+
+    snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
+    snake->body[0].nodeRect.setPosition(175.f, 200.f);
+
+    sf::Texture planeTEX;
+    planeTEX.loadFromFile("assets/image/plane3.png");
+    planeTEX.setRepeated(true);
+    wall.setPlaneTexture(planeTEX);
+
+    Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    sf::Texture foodTEX;
+    foodTEX.loadFromFile("assets/image/food2.png");
+    food.setFoodTexture(foodTEX);
+
+
+
+    // Start the game loop
+    while (window.isOpen())
     {
-        sf::Texture backgroundTEX;
-        backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
-        backgroundTEX.setRepeated(true);
-
-        sf::Sprite backgroundSPR(backgroundTEX);
-        backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
-
-        sf::Font simpleSquareFNT;
-        simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
-
-        /* sf::Text modeTitleTXT;
-        modeTitleTXT.setFont(simpleSquareFNT);
-        modeTitleTXT.setFillColor(sf::Color::White);
-        modeTitleTXT.setString("Classic");
-        modeTitleTXT.setCharacterSize(33.f);
-        modeTitleTXT.setPosition(sf::Vector2f(1020.f, 50.f)); */
-
-        /* sf::Text scoreLabelTXT;
-        scoreLabelTXT.setFont(simpleSquareFNT);
-        scoreLabelTXT.setFillColor(sf::Color::White);
-        scoreLabelTXT.setString("Score:");
-        scoreLabelTXT.setCharacterSize(30.f);
-        scoreLabelTXT.setPosition(sf::Vector2f(980.f, 120.f)); */
-
-        sf::Text scoreTXT;
-        scoreTXT.setFont(simpleSquareFNT);
-        scoreTXT.setFillColor(sf::Color::White);
-        scoreTXT.setCharacterSize(30.f);
-
-        short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
-        Snake *snake = new Snake(area, 1, 25.f);
-
-        sf::Texture headTEX;
-        sf::Texture bodyTEX;
-
-        headTEX.loadFromFile("assets/image/snakeHead2.png");
-        bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
-
-        snake->setSnakeTexture(headTEX, bodyTEX);
-
-        /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-        /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-
-        //Wall wall(window.getSize().x / snakeSize.x - 5, window.getSize().y / snakeSize.y - 5, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-        /* sf::Texture wallTEX;
-        wallTEX.loadFromFile("assets/image/wall.png");
-        wall.setWallTexture(wallTEX); */
-
-        wall.setWallColor(sf::Color::Transparent);
-
-        float centerX, centerY;
-        centerX = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
-        centerY = float((window.getSize().y / 2) - (wall.length / 2) * snakeSize.y);
-        wall.setWallPosition(centerX, centerY);
-
-        //wall.setWallPosition(0,0);
-
-        snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
-        snake->body[0].nodeRect.setPosition(175.f, 200.f);
-
-        sf::Texture planeTEX;
-        planeTEX.loadFromFile("assets/image/plane3.png");
-        planeTEX.setRepeated(true);
-        wall.setPlaneTexture(planeTEX);
-
-        Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-        sf::Texture foodTEX;
-        foodTEX.loadFromFile("assets/image/food2.png");
-        food.setFoodTexture(foodTEX);
-
-
-
-        // Start the game loop
-        while (window.isOpen())
+        // Process events
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            // Process events
-            sf::Event event;
-            while (window.pollEvent(event))
+            if (event.type == sf::Event::Closed)
             {
-                if (event.type == sf::Event::Closed)
+                window.close();
+            }
+            if (pause == false)
+            {
+                if (event.key.code == sf::Keyboard::Escape)
                 {
-                    window.close();
-                }
-                if (pause == false)
-                {
-                    if (event.key.code == sf::Keyboard::Escape)
-                    {
-                        pause = true;
-                    }
-
-                    snake->dpad();
-                }
-                if (pause == true)
-                {
-                    if (event.key.code == sf::Keyboard::Space)
-                    {
-                        pause = false;
-                    }
+                    pause = true;
                 }
 
+                snake->dpad();
+            }
+            if (pause == true)
+            {
+                if (event.key.code == sf::Keyboard::Space)
+                {
+                    pause = false;
+                }
             }
 
+        }
 
-            if(snake->lastMove != 0)
+
+        if(snake->lastMove != 0)
+        {
+            if(snake->checkSnakeCollision() == true)
             {
-                if(snake->checkSnakeCollision() == true)
-                {
-                    soundEffect.setBuffer(snakeWallCollideSB);
-                    soundEffect.play();
-                    gameOver = true;
-                }
-
-                if(snake->checkWallHit(wall) == true)
-                {
-                    soundEffect.setBuffer(snakeWallCollideSB);
-                    soundEffect.play();
-                    gameOver = true;
-                }
-
-                if (pause == false)
-                {
-                    snake->updatePosition(50.f);
-                }
-
+                soundEffect.setBuffer(snakeWallCollideSB);
+                soundEffect.play();
+                gameOver = true;
             }
 
-            // Clear screen
-            window.clear();
+            if(snake->checkWallHit(wall) == true)
+            {
+                soundEffect.setBuffer(snakeWallCollideSB);
+                soundEffect.play();
+                gameOver = true;
+            }
 
-            // Draw the sprite
-            window.draw(backgroundSPR);
+            if (pause == false)
+            {
+                snake->updatePosition(50.f);
+            }
 
-            wall.drawWall(window);
-            snake->drawSnake(window);
+        }
 
-            //window.draw(modeTitleTXT);
-            //window.draw(scoreLabelTXT);
-            scoreTXT.setString(std::to_string(score));
-            if( snake->head.nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()) ||
-                food.rect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
+        // Clear screen
+        window.clear();
+
+        // Draw the sprite
+        window.draw(backgroundSPR);
+
+        wall.drawWall(window);
+        snake->drawSnake(window);
+
+        //window.draw(modeTitleTXT);
+        //window.draw(scoreLabelTXT);
+        scoreTXT.setString(std::to_string(score));
+        if( snake->head.nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()) ||
+            food.rect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
+        {
+            scoreTXT.setFillColor(sf::Color(255,255,255,75));
+        }
+        else
+        {
+            scoreTXT.setFillColor(sf::Color::White);
+        }
+
+        for (unsigned int i = 0; i < snake->snakeSize; i++)
+        {
+            if(snake->body[i].nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
             {
                 scoreTXT.setFillColor(sf::Color(255,255,255,75));
             }
-            else
-            {
-                scoreTXT.setFillColor(sf::Color::White);
-            }
-
-            for (unsigned int i = 0; i < snake->snakeSize; i++)
-            {
-                if(snake->body[i].nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
-                {
-                    scoreTXT.setFillColor(sf::Color(255,255,255,75));
-                }
-            }
-
-            scoreTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2), 50.f));
-            window.draw(scoreTXT);
-
-            /* TEMPORARY PLACE */
-                if(food.x == 0 && food.y == 0)
-                {
-                    food.generateFood(wall.width, wall.length, wall.x, wall.y);
-                }
-                if(snake->checkFoodCollision(food))
-                {
-                    soundEffect.setBuffer(foodEatSB);
-                    soundEffect.play();
-                    food.generateFood(wall.width, wall.length, wall.x, wall.y);
-                    snake->snakeSize++;
-                    log("Food eaten",debugMode);
-                    score = score + 10;
-                    log("Score: " + std::to_string(score),debugMode);
-                }
-                if(snake->checkFoodHitBody(food))
-                {
-                    food.generateFood(wall.width, wall.length, wall.x, wall.y);
-                    log("Food spawned in body position, generate new food",debugMode);
-                }
-            /* TEMPORARY PLACE */
-
-            window.draw(food.rect);
-
-            if(pause == true)
-            {
-                drawPause(window);
-            }
-            if (gameOver == true)
-            {
-                GameClassicBGM.stop();
-                drawGameOver(window, score);
-                window.display();
-                sf::sleep(sf::seconds(2.f));
-                delete snake;
-                mainMenuUI(window);
-            }
-
-            // Update the window
-            window.display();
         }
+
+        scoreTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2), 50.f));
+        window.draw(scoreTXT);
+
+        /* TEMPORARY PLACE */
+            if(food.x == 0 && food.y == 0)
+            {
+                food.generateFood(wall.width, wall.length, wall.x, wall.y);
+            }
+            if(snake->checkFoodCollision(food))
+            {
+                soundEffect.setBuffer(foodEatSB);
+                soundEffect.play();
+                food.generateFood(wall.width, wall.length, wall.x, wall.y);
+                snake->snakeSize++;
+                log("Food eaten",debugMode);
+                score = score + 10;
+                log("Score: " + std::to_string(score),debugMode);
+            }
+            if(snake->checkFoodHitBody(food))
+            {
+                food.generateFood(wall.width, wall.length, wall.x, wall.y);
+                log("Food spawned in body position, generate new food",debugMode);
+            }
+        /* TEMPORARY PLACE */
+
+        window.draw(food.rect);
+
+        if(pause == true)
+        {
+            drawPause(window);
+        }
+        if (gameOver == true)
+        {
+            GameClassicBGM.stop();
+            drawGameOver(window, score);
+            window.display();
+            sf::sleep(sf::seconds(2.f));
+            delete snake;
+            mainMenuUI(window);
+        }
+
+        // Update the window
+        window.display();
     }
+    
 }
 
-void gameArcadeUI(sf::RenderWindow& window)
+void gameArcadeMode(sf::RenderWindow& window)
 {
     window.setMouseCursorVisible(false);
     unsigned int score = 0;
