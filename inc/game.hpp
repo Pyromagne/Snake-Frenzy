@@ -59,6 +59,7 @@ class Food
     public:
 
         Food(sf::RectangleShape sRect);
+        Food();
 
         sf::Vector2f nodeSize; //
         unsigned short x = 0;
@@ -67,6 +68,7 @@ class Food
 
         void generateFood(unsigned short width, unsigned short length, unsigned short xWall = 0, unsigned short yWall = 0);
         void setFoodTexture(sf::Texture& texture);
+        void setRectangle(sf::RectangleShape rect);
     //end of public
 };
 

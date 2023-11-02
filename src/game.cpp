@@ -80,6 +80,11 @@ Food::Food(sf::RectangleShape sRect) : rect(sRect)
     nodeSize.y = rect.getSize().y;
 }
 
+Food::Food()
+{
+
+}
+
 void Food::generateFood(unsigned short width, unsigned short length, unsigned short xWall, unsigned short yWall)
 {
     unsigned short min = genRandom(1, (width - 2));
@@ -95,6 +100,13 @@ void Food::setFoodTexture(sf::Texture& texture)
 {
     texture.setRepeated(true);
     rect.setTexture(&texture);
+}
+
+void Food::setRectangle(sf::RectangleShape rect)
+{   
+    this->rect = rect;
+    nodeSize.x = rect.getSize().x;
+    nodeSize.y = rect.getSize().y;
 }
 
 Snake::Snake()
@@ -137,7 +149,6 @@ void Snake::dpad(void)
     {
         if(!(lastMove2 == left))
         {
-            log("LEFT", debugMode);
             lastMove = left;
         }
     }
@@ -145,7 +156,6 @@ void Snake::dpad(void)
     {
         if (!(lastMove2 == right))
         {
-            log("RIGHT", debugMode);
             lastMove = right;
         }
     }
@@ -153,7 +163,6 @@ void Snake::dpad(void)
     {
         if (!(lastMove2 == up))
         {
-            log("UP", debugMode);
             lastMove = up;
         }
     }
@@ -161,7 +170,6 @@ void Snake::dpad(void)
     {
         if (!(lastMove2 == down))
         {
-            log("DOWN", debugMode);
             lastMove = down;
         }
     }

@@ -363,10 +363,14 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Clock gameOverCLK;
 
     sf::Music GameClassicBGM;
-    GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-09-Lightyear-City.ogg");
+    GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-03-To-the-Unknown.ogg");
     GameClassicBGM.setLoop(true);
     GameClassicBGM.play();
 
+    sf::SoundBuffer timesUpSB;
+    timesUpSB.loadFromFile("assets/audio/Retro-Charge-Off-11.wav");
+    sf::SoundBuffer countdownSB;
+    countdownSB.loadFromFile("assets/audio/Retro-Beeep-20.wav");
     sf::SoundBuffer foodEatSB;
     foodEatSB.loadFromFile("assets/audio/Retro-Blop-07.wav");
     sf::SoundBuffer snakeWallCollideSB;
@@ -390,6 +394,14 @@ void gameArcadeMode(sf::RenderWindow& window)
     scoreTXT.setFillColor(sf::Color::White);
     scoreTXT.setCharacterSize(30.f);
 
+    sf::Text timerTXT;
+    timerTXT.setFont(simpleSquareFNT);
+    timerTXT.setFillColor(sf::Color::White);
+    timerTXT.setCharacterSize(30.f);
+
+    short countdown = 6;
+    sf::Clock timerCLK;
+
     short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
     Snake *snake = new Snake(area, 1, 25.f);
 
@@ -405,45 +417,179 @@ void gameArcadeMode(sf::RenderWindow& window)
     /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
 
     wall.setWallColor(sf::Color::Transparent);
-
     float centerX, centerY;
     centerX = float((window.getSize().x / 2) - (wall.width / 2) * snakeSize.x);
     centerY = float((window.getSize().y / 2) - (wall.length / 2) * snakeSize.y);
     wall.setWallPosition(centerX, centerY);
+
+    snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
+    snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
     sf::Texture planeTEX;
     planeTEX.loadFromFile("assets/image/plane3.png");
     planeTEX.setRepeated(true);
     wall.setPlaneTexture(planeTEX);
 
-    snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
-    snake->body[0].nodeRect.setPosition(175.f, 200.f);
-
-    Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    const unsigned short foodMaxValue = 8;
+    Food foodArray[foodMaxValue];
     sf::Texture foodTEX;
     foodTEX.loadFromFile("assets/image/food2.png");
-    food.setFoodTexture(foodTEX);
+    for (unsigned short i = 0; i < foodMaxValue; i++)
+    {
+        foodArray[i].setRectangle(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+        foodArray[i].setFoodTexture(foodTEX);
+    }
 
+    // Start the game loop
     while (window.isOpen())
-    {   
+    {
+        // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
-            //sampleBTN.getButtonStatus(window, event);
-
             if (event.type == sf::Event::Closed)
             {
                 window.close();
             }
-            
+            if (pause == false)
+            {
+                if (event.key.code == sf::Keyboard::Escape)
+                {
+                    pause = true;
+                }
 
+                snake->dpad();
+            }
+            if (pause == true)
+            {
+                if (event.key.code == sf::Keyboard::Space)
+                {
+                    pause = false;
+                }
+            }
+
+        }
+
+
+        if(snake->lastMove != 0)
+        {
+            if(snake->checkSnakeCollision() == true)
+            {
+                soundEffect.setBuffer(snakeWallCollideSB);
+                soundEffect.play();
+                gameOver = true;
+            }
+
+            if(snake->checkWallHit(wall) == true)
+            {
+                soundEffect.setBuffer(snakeWallCollideSB);
+                soundEffect.play();
+                gameOver = true;
+            }
+
+            if (pause == false)
+            {
+                snake->updatePosition(50.f);
+                if (timerCLK.getElapsedTime().asSeconds() >= 1)
+                {
+                    countdown--;
+                    timerCLK.restart();
+                }
+            }
         }
 
         // Clear screen
         window.clear();
 
         // Draw the sprite
-        //sampleBTN.draw(window);
+        window.draw(backgroundSPR);
+
+        wall.drawWall(window);
+        snake->drawSnake(window);
+
+        scoreTXT.setString(std::to_string(score));
+        scoreTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2), 682.f));
+        window.draw(scoreTXT);
+
+        timerTXT.setString(std::to_string(countdown));
+        for (unsigned short i = 0; i < foodMaxValue; i++)
+        {
+            if( snake->head.nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()) ||
+            foodArray[i].rect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
+            {
+                timerTXT.setFillColor(sf::Color(255,255,255,75));
+            }
+            else
+            {
+                timerTXT.setFillColor(sf::Color::White);
+            }
+        }
+
+        if (countdown == 0)
+        {
+            soundEffect.setBuffer(timesUpSB);
+            soundEffect.play();
+            GameClassicBGM.stop();
+            drawGameOver(window, score);
+            window.display();
+            sf::sleep(sf::seconds(2.f));
+            delete snake;
+            mainMenuUI(window);
+        }
+
+        timerTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (timerTXT.getLocalBounds().width / 2), 50.f));
+        window.draw(timerTXT);
+        
+        /* TEMPORARY PLACE */
+            for (unsigned short i = 0; i < foodMaxValue; i++)
+            {
+                if(foodArray[i].x == 0 && foodArray[i].y == 0)
+                {
+                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+                }
+                if(snake->checkFoodCollision(foodArray[i]))
+                {
+                    soundEffect.setBuffer(foodEatSB);
+                    soundEffect.play();
+                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+                    snake->snakeSize++;
+                    score = score + 10;
+                    countdown = countdown + 1;
+                }
+                if(snake->checkFoodHitBody(foodArray[i]))
+                {
+                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+                }
+                for (unsigned short j = i + 1; j < foodMaxValue; j++)
+                {
+                    if (foodArray[i].x == foodArray[j].x && foodArray[i].y == foodArray[j].y)
+                    {
+                        log("Food Spawn in other Food Position, Generating new food", debugMode);
+                        foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+                    }
+                    
+                }
+                
+
+                window.draw(foodArray[i].rect);
+            }
+        /* TEMPORARY PLACE */
+        
+            
+
+        if(pause == true)
+        {
+            drawPause(window);
+        }
+        if (gameOver == true)
+        {
+            GameClassicBGM.stop();
+            drawGameOver(window, score);
+            window.display();
+            sf::sleep(sf::seconds(2.f));
+            delete snake;
+            mainMenuUI(window);
+        }
 
         // Update the window
         window.display();
