@@ -362,15 +362,17 @@ void gameArcadeMode(sf::RenderWindow& window)
     bool gameOver = false;
     sf::Clock gameOverCLK;
 
-    sf::Music GameClassicBGM;
-    GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-03-To-the-Unknown.ogg");
-    GameClassicBGM.setLoop(true);
-    GameClassicBGM.play();
+    sf::Music arcadeMSC;
+    arcadeMSC.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-03-To-the-Unknown.ogg");
+    arcadeMSC.setLoop(true);
+    arcadeMSC.play();
 
     sf::SoundBuffer timesUpSB;
     timesUpSB.loadFromFile("assets/audio/Retro-Charge-Off-11.wav");
     sf::SoundBuffer countdownSB;
     countdownSB.loadFromFile("assets/audio/Retro-Beeep-20.wav");
+    sf::SoundBuffer foodBonusSB;
+    foodBonusSB.loadFromFile("assets/audio/Retro-Magic-11.wav");
     sf::SoundBuffer foodEatSB;
     foodEatSB.loadFromFile("assets/audio/Retro-Blop-07.wav");
     sf::SoundBuffer snakeWallCollideSB;
@@ -399,7 +401,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     timerTXT.setFillColor(sf::Color::White);
     timerTXT.setCharacterSize(30.f);
 
-    short countdown = 6;
+    short countdown = 45;
     sf::Clock timerCLK;
 
     short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
@@ -439,6 +441,14 @@ void gameArcadeMode(sf::RenderWindow& window)
         foodArray[i].setRectangle(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
         foodArray[i].setFoodTexture(foodTEX);
     }
+
+    Food foodBonus(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
+    sf::Texture foodBonusTEX;
+    foodBonusTEX.loadFromFile("assets/image/food.png");
+    foodBonus.setFoodTexture(foodBonusTEX);
+    sf::Clock foodBonusCLK;
+    bool isFoodBonusPresent = false;
+    unsigned short foodBonusChance;
 
     // Start the game loop
     while (window.isOpen())
@@ -514,8 +524,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         timerTXT.setString(std::to_string(countdown));
         for (unsigned short i = 0; i < foodMaxValue; i++)
         {
-            if( snake->head.nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()) ||
-            foodArray[i].rect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
+            if(foodArray[i].rect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
             {
                 timerTXT.setFillColor(sf::Color(255,255,255,75));
             }
@@ -524,21 +533,26 @@ void gameArcadeMode(sf::RenderWindow& window)
                 timerTXT.setFillColor(sf::Color::White);
             }
         }
-
-        if (countdown == 0)
+        if(snake->head.nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
         {
-            soundEffect.setBuffer(timesUpSB);
-            soundEffect.play();
-            GameClassicBGM.stop();
-            drawGameOver(window, score);
-            window.display();
-            sf::sleep(sf::seconds(2.f));
-            delete snake;
-            mainMenuUI(window);
+            timerTXT.setFillColor(sf::Color(255,255,255,75));
+        }
+        else
+        {
+            timerTXT.setFillColor(sf::Color::White);
+        }
+        
+        for (unsigned int i = 0; i < snake->snakeSize; i++)
+        {
+            if(snake->body[i].nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
+            {
+                timerTXT.setFillColor(sf::Color(255,255,255,75));
+            }
         }
 
         timerTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (timerTXT.getLocalBounds().width / 2), 50.f));
         window.draw(timerTXT);
+
         
         /* TEMPORARY PLACE */
             for (unsigned short i = 0; i < foodMaxValue; i++)
@@ -548,13 +562,20 @@ void gameArcadeMode(sf::RenderWindow& window)
                     foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
                 }
                 if(snake->checkFoodCollision(foodArray[i]))
-                {
+                {   
                     soundEffect.setBuffer(foodEatSB);
                     soundEffect.play();
                     foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
                     snake->snakeSize++;
                     score = score + 10;
                     countdown = countdown + 1;
+
+                    if (isFoodBonusPresent == false)
+                    {
+                        foodBonusChance = genRandom(1,100);
+                        log(std::to_string(foodBonusChance), debugMode);
+                    }
+                    
                 }
                 if(snake->checkFoodHitBody(foodArray[i]))
                 {
@@ -564,18 +585,52 @@ void gameArcadeMode(sf::RenderWindow& window)
                 {
                     if (foodArray[i].x == foodArray[j].x && foodArray[i].y == foodArray[j].y)
                     {
-                        log("Food Spawn in other Food Position, Generating new food", debugMode);
                         foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
                     }
-                    
                 }
                 
-
                 window.draw(foodArray[i].rect);
             }
-        /* TEMPORARY PLACE */
-        
+
+            if (foodBonusChance <= 10 && isFoodBonusPresent == false)
+            {   
+                foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
+
+                if(snake->checkFoodHitBody(foodBonus))
+                {
+                    foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
+                }
+                for (unsigned short i = 0; i < foodMaxValue; i++)
+                {
+                    if (foodBonus.x == foodArray[i].x && foodBonus.y == foodArray[i].y)
+                    {
+                        foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
+                    }
+                }
+
+                soundEffect.setBuffer(foodBonusSB);
+                soundEffect.play();
+                isFoodBonusPresent = true;
+            }
+
+            if (isFoodBonusPresent)
+            {
+                window.draw(foodBonus.rect);
+                if(snake->checkFoodCollision(foodBonus))
+                {
+                    isFoodBonusPresent = false;
+                    foodBonus.rect.setPosition(0.f,0.f);
+                    soundEffect.setBuffer(foodEatSB);
+                    soundEffect.play();
+                    score = score + 100;
+                    countdown = countdown + 3;
+                    foodBonusChance = genRandom(1,100);
+                    log(std::to_string(foodBonusChance), debugMode);
+                }
+            }
             
+            
+        /* TEMPORARY PLACE */
 
         if(pause == true)
         {
@@ -583,7 +638,18 @@ void gameArcadeMode(sf::RenderWindow& window)
         }
         if (gameOver == true)
         {
-            GameClassicBGM.stop();
+            arcadeMSC.stop();
+            drawGameOver(window, score);
+            window.display();
+            sf::sleep(sf::seconds(2.f));
+            delete snake;
+            mainMenuUI(window);
+        }
+        if (countdown == 0)
+        {
+            soundEffect.setBuffer(timesUpSB);
+            soundEffect.play();
+            arcadeMSC.stop();
             drawGameOver(window, score);
             window.display();
             sf::sleep(sf::seconds(2.f));
