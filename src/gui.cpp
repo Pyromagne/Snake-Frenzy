@@ -449,6 +449,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Clock foodBonusCLK;
     bool isFoodBonusPresent = false;
     unsigned short foodBonusChance;
+    speed snakeSpeed = spd1;
 
     // Start the game loop
     while (window.isOpen())
@@ -480,6 +481,38 @@ void gameArcadeMode(sf::RenderWindow& window)
 
         }
 
+        switch (snake->snakeSize)
+        {
+        case 20:
+            snakeSpeed = spd2;
+        break;
+        case 30:
+            snakeSpeed = spd3;
+        break;
+        case 40:
+            snakeSpeed = spd4;
+        break;
+        case 50:
+            snakeSpeed = spd5;
+        break;
+        case 60:
+            snakeSpeed = spd6;
+        break;
+        case 70:
+            snakeSpeed = spd7;
+        break;
+        case 80:
+            snakeSpeed = spd8;
+        break;
+        case 90:
+            snakeSpeed = spd9;
+        break;
+        case 100:
+            snakeSpeed = spd10;
+        break;
+        }
+        
+
 
         if(snake->lastMove != 0)
         {
@@ -499,7 +532,7 @@ void gameArcadeMode(sf::RenderWindow& window)
 
             if (pause == false)
             {
-                snake->updatePosition(50.f);
+                snake->updatePosition(snakeSpeed);
                 if (timerCLK.getElapsedTime().asSeconds() >= 1)
                 {
                     countdown--;
@@ -522,17 +555,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         window.draw(scoreTXT);
 
         timerTXT.setString(std::to_string(countdown));
-        for (unsigned short i = 0; i < foodMaxValue; i++)
-        {
-            if(foodArray[i].rect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
-            {
-                timerTXT.setFillColor(sf::Color(255,255,255,75));
-            }
-            else
-            {
-                timerTXT.setFillColor(sf::Color::White);
-            }
-        }
+        
         if(snake->head.nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
         {
             timerTXT.setFillColor(sf::Color(255,255,255,75));
@@ -545,6 +568,14 @@ void gameArcadeMode(sf::RenderWindow& window)
         for (unsigned int i = 0; i < snake->snakeSize; i++)
         {
             if(snake->body[i].nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
+            {
+                timerTXT.setFillColor(sf::Color(255,255,255,75));
+            }
+        }
+
+        for (unsigned short i = 0; i < foodMaxValue; i++)
+        {
+            if(foodArray[i].rect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
             {
                 timerTXT.setFillColor(sf::Color(255,255,255,75));
             }

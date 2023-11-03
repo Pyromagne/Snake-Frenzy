@@ -16,6 +16,20 @@ enum direction
     down = 4
 };
 
+enum speed
+{
+    spd1 = 75,
+    spd2 = 70,
+    spd3 = 65,
+    spd4 = 60,
+    spd5 = 55,
+    spd6 = 50,
+    spd7 = 45,
+    spd8 = 40,
+    spd9 = 35,
+    spd10 = 30,
+};
+
 class Node
 {
     public:
