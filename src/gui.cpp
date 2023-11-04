@@ -432,7 +432,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     planeTEX.setRepeated(true);
     wall.setPlaneTexture(planeTEX);
 
-    const unsigned short foodMaxValue = 8;
+    const unsigned short foodMaxValue = 20;
     Food foodArray[foodMaxValue];
     sf::Texture foodTEX;
     foodTEX.loadFromFile("assets/image/food2.png");
@@ -559,10 +559,19 @@ void gameArcadeMode(sf::RenderWindow& window)
         if(snake->head.nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
         {
             timerTXT.setFillColor(sf::Color(255,255,255,75));
+            if (countdown <= 10)
+            {
+                timerTXT.setFillColor(sf::Color(255,0,0,75));
+            }
+            
         }
         else
-        {
+        {   
             timerTXT.setFillColor(sf::Color::White);
+            if (countdown <= 10)
+            {
+                timerTXT.setFillColor(sf::Color::Red);
+            }
         }
         
         for (unsigned int i = 0; i < snake->snakeSize; i++)
@@ -570,6 +579,10 @@ void gameArcadeMode(sf::RenderWindow& window)
             if(snake->body[i].nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
             {
                 timerTXT.setFillColor(sf::Color(255,255,255,75));
+                if (countdown <= 10)
+                {
+                    timerTXT.setFillColor(sf::Color(255,0,0,75));
+                }
             }
         }
 
