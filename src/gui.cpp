@@ -446,7 +446,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Texture foodBonusTEX;
     foodBonusTEX.loadFromFile("assets/image/food.png");
     foodBonus.setFoodTexture(foodBonusTEX);
-    sf::Clock foodBonusCLK;
+    unsigned short foodBonusCountdown = 5;
     bool isFoodBonusPresent = false;
     unsigned short foodBonusChance;
     speed snakeSpeed = spd1;
@@ -536,6 +536,11 @@ void gameArcadeMode(sf::RenderWindow& window)
                 if (timerCLK.getElapsedTime().asSeconds() >= 1)
                 {
                     countdown--;
+                    if (isFoodBonusPresent)
+                    {
+                        foodBonusCountdown--;
+                    }
+                    
                     timerCLK.restart();
                 }
             }
@@ -638,6 +643,7 @@ void gameArcadeMode(sf::RenderWindow& window)
 
             if (foodBonusChance <= 10 && isFoodBonusPresent == false)
             {   
+                foodBonusCountdown = 5;
                 foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
 
                 if(snake->checkFoodHitBody(foodBonus))
@@ -671,6 +677,13 @@ void gameArcadeMode(sf::RenderWindow& window)
                     foodBonusChance = genRandom(1,100);
                     log(std::to_string(foodBonusChance), debugMode);
                 }
+                if (foodBonusCountdown == 0)
+                {
+                    isFoodBonusPresent = false;
+                    foodBonus.rect.setPosition(0.f,0.f);
+                    foodBonusChance = genRandom(1,100);
+                }
+                
             }
             
             
