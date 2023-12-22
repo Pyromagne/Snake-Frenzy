@@ -6,32 +6,32 @@ void mainMenuUI(sf::RenderWindow& window)
     window.setMouseCursorVisible(true);
     log("Initializing GUI",debugMode);
     sf::Font simpleSquareFNT;
-    simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
+    simpleSquareFNT.loadFromFile("assets/font/RenogareSoft-Regular.ttf");
 
     sf::Text titleTXT;
     titleTXT.setFont(simpleSquareFNT);
-    titleTXT.setFillColor(sf::Color(45, 226, 230));
+    titleTXT.setFillColor(color::ONYX);
     titleTXT.setString("Snake: Frenzy");
     titleTXT.setCharacterSize(50.f);
     titleTXT.setPosition(sf::Vector2f(100.f, 50));
 
     RectButton classicModeBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 300.f));
-    classicModeBTN.setLabelColor(sf::Color::White, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
+    classicModeBTN.setLabelColor(color::ONYX, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
     classicModeBTN.setButtonColor(sf::Color::Transparent);
     classicModeBTN.setButtonLabel(40.f, "Classic");
 
     RectButton arcadeModeBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 400.f));
-    arcadeModeBTN.setLabelColor(sf::Color::White, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
+    arcadeModeBTN.setLabelColor(color::ONYX, sf::Color(255, 108, 17), sf::Color(255, 108, 17));
     arcadeModeBTN.setButtonColor(sf::Color::Transparent);
     arcadeModeBTN.setButtonLabel(40.f, "Arcade");
 
     RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 500.f));
-    exitBTN.setLabelColor(sf::Color::White, sf::Color::Red, sf::Color::Red);
+    exitBTN.setLabelColor(color::ONYX, sf::Color::Red, sf::Color::Red);
     exitBTN.setButtonColor(sf::Color::Transparent);
     exitBTN.setButtonLabel(40.f, "Exit");
 
     RectButton authorBTN(simpleSquareFNT, true, sf::Vector2f(window.getSize().x - 275, window.getSize().y - 75));
-    authorBTN.setLabelColor(sf::Color(246, 1, 157), sf::Color(212, 0, 120), sf::Color(212, 0, 120));
+    authorBTN.setLabelColor(sf::Color(0x594D58ff));
     authorBTN.setButtonColor(sf::Color::Transparent);
     authorBTN.setButtonLabel(30.f, "Pyromagne");
 
@@ -39,8 +39,8 @@ void mainMenuUI(sf::RenderWindow& window)
     backgroundTEX.loadFromFile("assets/image/backgroundSW.png");
     backgroundTEX.setRepeated(true);
 
-    sf::Sprite backgroundSPR(backgroundTEX);
-    backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
+    sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
+    backgroundSPR.setFillColor(sf::Color(204, 205, 198));
 
     sf::Event event;
     //temporary fix the visual bug in buttons
@@ -48,11 +48,12 @@ void mainMenuUI(sf::RenderWindow& window)
         arcadeModeBTN.getButtonStatus(window, event);
         exitBTN.getButtonStatus(window, event);
         authorBTN.getButtonStatus(window, event);
-    //temporary fix the visual bug in buttons 
+    //temporary fix the visual bug in buttons
 
     sf::Music MainMenuBGM;
     MainMenuBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-07-The-Hidden-One.ogg");
     MainMenuBGM.setLoop(true);
+    MainMenuBGM.setVolume(30.f);
     MainMenuBGM.play();
 
     sf::SoundBuffer selectHoverSB;
@@ -62,6 +63,7 @@ void mainMenuUI(sf::RenderWindow& window)
 
     sf::Sound soundEffect;
     soundEffect.setLoop(false);
+    soundEffect.setVolume(30.f);
 
     // Start the game loop
     while (window.isOpen())
@@ -141,6 +143,7 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Music GameClassicBGM;
     GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-09-Lightyear-City.ogg");
     GameClassicBGM.setLoop(true);
+    GameClassicBGM.setVolume(30.f);
     GameClassicBGM.play();
 
     sf::SoundBuffer foodEatSB;
@@ -155,25 +158,16 @@ void gameClassicMode(sf::RenderWindow& window)
     backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
     backgroundTEX.setRepeated(true);
 
+    sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
+    backgroundSPR.setFillColor(sf::Color(204, 205, 198));
+
+    /*
     sf::Sprite backgroundSPR(backgroundTEX);
     backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
+    */
 
     sf::Font simpleSquareFNT;
     simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
-
-    /* sf::Text modeTitleTXT;
-    modeTitleTXT.setFont(simpleSquareFNT);
-    modeTitleTXT.setFillColor(sf::Color::White);
-    modeTitleTXT.setString("Classic");
-    modeTitleTXT.setCharacterSize(33.f);
-    modeTitleTXT.setPosition(sf::Vector2f(1020.f, 50.f)); */
-
-    /* sf::Text scoreLabelTXT;
-    scoreLabelTXT.setFont(simpleSquareFNT);
-    scoreLabelTXT.setFillColor(sf::Color::White);
-    scoreLabelTXT.setString("Score:");
-    scoreLabelTXT.setCharacterSize(30.f);
-    scoreLabelTXT.setPosition(sf::Vector2f(980.f, 120.f)); */
 
     sf::Text scoreTXT;
     scoreTXT.setFont(simpleSquareFNT);
@@ -214,12 +208,14 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Texture planeTEX;
     planeTEX.loadFromFile("assets/image/plane3.png");
     planeTEX.setRepeated(true);
-    wall.setPlaneTexture(planeTEX);
+    //wall.setPlaneTexture(planeTEX);
+    wall.setPlaneColor(sf::Color(0x555555ff));
 
     Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-    sf::Texture foodTEX;
+    /* sf::Texture foodTEX;
     foodTEX.loadFromFile("assets/image/food2.png");
-    food.setFoodTexture(foodTEX);
+    food.setFoodTexture(foodTEX); */
+    food.rect.setFillColor(color::ONYX);
 
 
 
@@ -286,8 +282,6 @@ void gameClassicMode(sf::RenderWindow& window)
         wall.drawWall(window);
         snake->drawSnake(window);
 
-        //window.draw(modeTitleTXT);
-        //window.draw(scoreLabelTXT);
         scoreTXT.setString(std::to_string(score));
         if( snake->head.nodeRect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()) ||
             food.rect.getGlobalBounds().intersects(scoreTXT.getGlobalBounds()))
@@ -351,7 +345,7 @@ void gameClassicMode(sf::RenderWindow& window)
         // Update the window
         window.display();
     }
-    
+
 }
 
 void gameArcadeMode(sf::RenderWindow& window)
@@ -365,6 +359,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Music arcadeMSC;
     arcadeMSC.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-03-To-the-Unknown.ogg");
     arcadeMSC.setLoop(true);
+    arcadeMSC.setVolume(30.f);
     arcadeMSC.play();
 
     sf::SoundBuffer timesUpSB;
@@ -385,8 +380,8 @@ void gameArcadeMode(sf::RenderWindow& window)
     backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
     backgroundTEX.setRepeated(true);
 
-    sf::Sprite backgroundSPR(backgroundTEX);
-    backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
+    sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
+    backgroundSPR.setFillColor(sf::Color(204, 205, 198));
 
     sf::Font simpleSquareFNT;
     simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
@@ -511,7 +506,7 @@ void gameArcadeMode(sf::RenderWindow& window)
             snakeSpeed = spd10;
         break;
         }
-        
+
 
 
         if(snake->lastMove != 0)
@@ -540,7 +535,7 @@ void gameArcadeMode(sf::RenderWindow& window)
                     {
                         foodBonusCountdown--;
                     }
-                    
+
                     timerCLK.restart();
                 }
             }
@@ -560,7 +555,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         window.draw(scoreTXT);
 
         timerTXT.setString(std::to_string(countdown));
-        
+
         if(snake->head.nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
         {
             timerTXT.setFillColor(sf::Color(255,255,255,75));
@@ -568,17 +563,17 @@ void gameArcadeMode(sf::RenderWindow& window)
             {
                 timerTXT.setFillColor(sf::Color(255,0,0,75));
             }
-            
+
         }
         else
-        {   
+        {
             timerTXT.setFillColor(sf::Color::White);
             if (countdown <= 10)
             {
                 timerTXT.setFillColor(sf::Color::Red);
             }
         }
-        
+
         for (unsigned int i = 0; i < snake->snakeSize; i++)
         {
             if(snake->body[i].nodeRect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
@@ -602,7 +597,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         timerTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (timerTXT.getLocalBounds().width / 2), 50.f));
         window.draw(timerTXT);
 
-        
+
         /* TEMPORARY PLACE */
             for (unsigned short i = 0; i < foodMaxValue; i++)
             {
@@ -611,7 +606,7 @@ void gameArcadeMode(sf::RenderWindow& window)
                     foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
                 }
                 if(snake->checkFoodCollision(foodArray[i]))
-                {   
+                {
                     soundEffect.setBuffer(foodEatSB);
                     soundEffect.play();
                     foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
@@ -624,7 +619,7 @@ void gameArcadeMode(sf::RenderWindow& window)
                         foodBonusChance = genRandom(1,100);
                         log(std::to_string(foodBonusChance), debugMode);
                     }
-                    
+
                 }
                 if(snake->checkFoodHitBody(foodArray[i]))
                 {
@@ -637,12 +632,12 @@ void gameArcadeMode(sf::RenderWindow& window)
                         foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
                     }
                 }
-                
+
                 window.draw(foodArray[i].rect);
             }
 
             if (foodBonusChance <= 10 && isFoodBonusPresent == false)
-            {   
+            {
                 foodBonusCountdown = 5;
                 foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
 
@@ -683,10 +678,10 @@ void gameArcadeMode(sf::RenderWindow& window)
                     foodBonus.rect.setPosition(0.f,0.f);
                     foodBonusChance = genRandom(1,100);
                 }
-                
+
             }
-            
-            
+
+
         /* TEMPORARY PLACE */
 
         if(pause == true)

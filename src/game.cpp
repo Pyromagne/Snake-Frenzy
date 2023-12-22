@@ -15,8 +15,9 @@ Wall::Wall(int width, int length, sf::RectangleShape sRect) : topRect(sRect), bo
     this->nodeSize.y  = sRect.getSize().y;
 
     //plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x, length * nodeSize.y));
-    plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
-
+    //plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
+    plane = sf::RectangleShape(sf::Vector2f(width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
+    
     topRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
     leftRect = sf::RectangleShape(sf::Vector2f(nodeSize.x, float(length * nodeSize.y)));
     bottomRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
@@ -56,13 +57,15 @@ void Wall::setWallTexture(sf::Texture& texture)
 
 void Wall::setPlaneColor(sf::Color color)
 {
-    plane.setColor(color);
+    //plane.setColor(color);
+    plane.setFillColor(color);
+    
 }
 
 void Wall::setPlaneTexture(sf::Texture& texture)
 {
     texture.setRepeated(true);
-    plane.setTexture(texture);
+    //plane.setTexture(texture);
 }
 
 void Wall::drawWall(sf::RenderWindow& window)

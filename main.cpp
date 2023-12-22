@@ -61,3 +61,4 @@ int main(int argc, char* argv[])
 }
 
 //memory issue fixed but flow of the game must be improve
+//CHANGE OF PLAN MAKE THE GAME FLAT ART NOT SYNTHWAVE

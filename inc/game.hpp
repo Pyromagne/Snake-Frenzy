@@ -7,6 +7,10 @@
 extern sf::Font defaultFont;
 extern sf::Vector2i resolution;
 
+namespace color{
+    const sf::Color ONYX = sf::Color(0x353839ff);
+}
+
 enum direction
 {
     null = 0,
@@ -58,7 +62,8 @@ class Wall
     sf::RectangleShape leftRect;
     sf::RectangleShape rightRect;
 
-    sf::Sprite plane;
+    //sf::Sprite plane;
+    sf::RectangleShape plane;
 
     void setWallPosition(float x, float y);
     void setWallColor(sf::Color);
