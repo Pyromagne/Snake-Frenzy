@@ -180,10 +180,10 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Texture headTEX;
     sf::Texture bodyTEX;
 
-    headTEX.loadFromFile("assets/image/snakeHead2.png");
+    headTEX.loadFromFile("assets/image/default.png");
     bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
-
-    snake->setSnakeTexture(headTEX, bodyTEX);
+    snake->head.nodeRect.setFillColor(sf::Color::Blue);
+    snake->setSnakeTexture(headTEX, headTEX);
 
     /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
     /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
@@ -405,10 +405,10 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Texture headTEX;
     sf::Texture bodyTEX;
 
-    headTEX.loadFromFile("assets/image/snakeHead2.png");
+    headTEX.loadFromFile("assets/image/default.png");
     bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
-
-    snake->setSnakeTexture(headTEX, bodyTEX);
+    snake->head.nodeRect.setFillColor(sf::Color::Blue);
+    snake->setSnakeTexture(headTEX, headTEX);
 
     /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
     /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
@@ -425,7 +425,9 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Texture planeTEX;
     planeTEX.loadFromFile("assets/image/plane3.png");
     planeTEX.setRepeated(true);
-    wall.setPlaneTexture(planeTEX);
+    //wall.setPlaneTexture(planeTEX);
+    wall.setPlaneColor(sf::Color(0x555555ff));
+
 
     const unsigned short foodMaxValue = 20;
     Food foodArray[foodMaxValue];
