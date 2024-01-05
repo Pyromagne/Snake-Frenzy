@@ -35,9 +35,9 @@ void mainMenuUI(sf::RenderWindow& window)
     authorBTN.setButtonColor(sf::Color::Transparent);
     authorBTN.setButtonLabel(30.f, "Pyromagne");
 
-    sf::Texture backgroundTEX;
+    /* sf::Texture backgroundTEX;
     backgroundTEX.loadFromFile("assets/image/backgroundSW.png");
-    backgroundTEX.setRepeated(true);
+    backgroundTEX.setRepeated(true); */
 
     sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
     backgroundSPR.setFillColor(sf::Color(204, 205, 198));
@@ -50,11 +50,11 @@ void mainMenuUI(sf::RenderWindow& window)
         authorBTN.getButtonStatus(window, event);
     //temporary fix the visual bug in buttons
 
-    sf::Music MainMenuBGM;
+    /* sf::Music MainMenuBGM;
     MainMenuBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-07-The-Hidden-One.ogg");
     MainMenuBGM.setLoop(true);
     MainMenuBGM.setVolume(30.f);
-    MainMenuBGM.play();
+    MainMenuBGM.play(); */
 
     sf::SoundBuffer selectHoverSB;
     selectHoverSB.loadFromFile("assets/audio/Retro-Blip-07.wav");
@@ -97,14 +97,14 @@ void mainMenuUI(sf::RenderWindow& window)
             {
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
-                MainMenuBGM.stop();
+                //MainMenuBGM.stop();
                 gameClassicMode(window);
             }
             if (arcadeModeBTN.isPressed)
             {
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
-                MainMenuBGM.stop();
+                //MainMenuBGM.stop();
                 gameArcadeMode(window);
             }
             if (authorBTN.isPressed)
@@ -134,17 +134,19 @@ void mainMenuUI(sf::RenderWindow& window)
 
 void gameClassicMode(sf::RenderWindow& window)
 {
+    int c = 0;
+
     window.setMouseCursorVisible(false);
     unsigned int score = 0;
     bool pause = false;
     bool gameOver = false;
     sf::Clock gameOverCLK;
 
-    sf::Music GameClassicBGM;
+    /* sf::Music GameClassicBGM;
     GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-09-Lightyear-City.ogg");
     GameClassicBGM.setLoop(true);
     GameClassicBGM.setVolume(30.f);
-    GameClassicBGM.play();
+    GameClassicBGM.play(); */
 
     sf::SoundBuffer foodEatSB;
     foodEatSB.loadFromFile("assets/audio/Retro-Blop-07.wav");
@@ -154,9 +156,9 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Sound soundEffect;
     soundEffect.setLoop(false);
 
-    sf::Texture backgroundTEX;
+    /* sf::Texture backgroundTEX;
     backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
-    backgroundTEX.setRepeated(true);
+    backgroundTEX.setRepeated(true); */
 
     sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
     backgroundSPR.setFillColor(sf::Color(204, 205, 198));
@@ -167,7 +169,7 @@ void gameClassicMode(sf::RenderWindow& window)
     */
 
     sf::Font simpleSquareFNT;
-    simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
+    simpleSquareFNT.loadFromFile("assets/font/RenogareSoft-Regular.ttf");
 
     sf::Text scoreTXT;
     scoreTXT.setFont(simpleSquareFNT);
@@ -180,10 +182,10 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Texture headTEX;
     sf::Texture bodyTEX;
 
-    headTEX.loadFromFile("assets/image/default.png");
-    bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
-    snake->head.nodeRect.setFillColor(sf::Color::Blue);
-    snake->setSnakeTexture(headTEX, headTEX);
+    headTEX.loadFromFile("assets/image/rounded.png");
+    bodyTEX.loadFromFile("assets/image/rounded.png");
+    //snake->head.nodeRect.setFillColor(sf::Color::Blue);
+    snake->setSnakeTexture(headTEX, bodyTEX);
 
     /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
     /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
@@ -205,16 +207,16 @@ void gameClassicMode(sf::RenderWindow& window)
     snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
     snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
-    sf::Texture planeTEX;
+    /* sf::Texture planeTEX;
     planeTEX.loadFromFile("assets/image/plane3.png");
     planeTEX.setRepeated(true);
-    //wall.setPlaneTexture(planeTEX);
+    //wall.setPlaneTexture(planeTEX); */
     wall.setPlaneColor(sf::Color(0x555555ff));
 
     Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-    /* sf::Texture foodTEX;
-    foodTEX.loadFromFile("assets/image/food2.png");
-    food.setFoodTexture(foodTEX); */
+    sf::Texture foodTEX;
+    foodTEX.loadFromFile("assets/image/rounded.png");
+    food.setFoodTexture(foodTEX);
     food.rect.setFillColor(color::ONYX);
 
 
@@ -317,6 +319,16 @@ void gameClassicMode(sf::RenderWindow& window)
                 snake->snakeSize++;
                 log("Food eaten",debugMode);
                 score = score + 10;
+
+                c = c + 10;
+                for (unsigned int i = 0; i < snake->snakeSize; i++)
+                { 
+                    int cc = c + i * 10; // Increment hue based on the index i
+                    snake->body[i].nodeRect.setFillColor(hsv(cc % 360, 55, 88));
+                }
+
+                
+
                 log("Score: " + std::to_string(score),debugMode);
             }
             if(snake->checkFoodHitBody(food))
@@ -334,7 +346,7 @@ void gameClassicMode(sf::RenderWindow& window)
         }
         if (gameOver == true)
         {
-            GameClassicBGM.stop();
+            //GameClassicBGM.stop();
             drawGameOver(window, score);
             window.display();
             sf::sleep(sf::seconds(2.f));
@@ -356,11 +368,11 @@ void gameArcadeMode(sf::RenderWindow& window)
     bool gameOver = false;
     sf::Clock gameOverCLK;
 
-    sf::Music arcadeMSC;
+    /* sf::Music arcadeMSC;
     arcadeMSC.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-03-To-the-Unknown.ogg");
     arcadeMSC.setLoop(true);
     arcadeMSC.setVolume(30.f);
-    arcadeMSC.play();
+    arcadeMSC.play(); */
 
     sf::SoundBuffer timesUpSB;
     timesUpSB.loadFromFile("assets/audio/Retro-Charge-Off-11.wav");
@@ -376,15 +388,15 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Sound soundEffect;
     soundEffect.setLoop(false);
 
-    sf::Texture backgroundTEX;
+    /* sf::Texture backgroundTEX;
     backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
-    backgroundTEX.setRepeated(true);
+    backgroundTEX.setRepeated(true); */
 
     sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
     backgroundSPR.setFillColor(sf::Color(204, 205, 198));
 
     sf::Font simpleSquareFNT;
-    simpleSquareFNT.loadFromFile("assets/font/ST-SimpleSquare.otf");
+    simpleSquareFNT.loadFromFile("assets/font/RenogareSoft-Regular.ttf");
 
     sf::Text scoreTXT;
     scoreTXT.setFont(simpleSquareFNT);
@@ -405,8 +417,8 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Texture headTEX;
     sf::Texture bodyTEX;
 
-    headTEX.loadFromFile("assets/image/default.png");
-    bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
+    headTEX.loadFromFile("assets/image/rounded.png");
+    //bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
     snake->head.nodeRect.setFillColor(sf::Color::Blue);
     snake->setSnakeTexture(headTEX, headTEX);
 
@@ -422,9 +434,9 @@ void gameArcadeMode(sf::RenderWindow& window)
     snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
     snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
-    sf::Texture planeTEX;
+    /* sf::Texture planeTEX;
     planeTEX.loadFromFile("assets/image/plane3.png");
-    planeTEX.setRepeated(true);
+    planeTEX.setRepeated(true); */
     //wall.setPlaneTexture(planeTEX);
     wall.setPlaneColor(sf::Color(0x555555ff));
 
@@ -432,20 +444,22 @@ void gameArcadeMode(sf::RenderWindow& window)
     const unsigned short foodMaxValue = 20;
     Food foodArray[foodMaxValue];
     sf::Texture foodTEX;
-    foodTEX.loadFromFile("assets/image/food2.png");
+    foodTEX.loadFromFile("assets/image/rounded.png");
     for (unsigned short i = 0; i < foodMaxValue; i++)
     {
         foodArray[i].setRectangle(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
         foodArray[i].setFoodTexture(foodTEX);
+        foodArray[i].setFoodColor(hsv(0, 64, 71));
     }
 
     Food foodBonus(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
     sf::Texture foodBonusTEX;
-    foodBonusTEX.loadFromFile("assets/image/food.png");
+    foodBonusTEX.loadFromFile("assets/image/rounded.png");
     foodBonus.setFoodTexture(foodBonusTEX);
+    foodBonus.setFoodColor(hsv(50, 80, 96));
     unsigned short foodBonusCountdown = 5;
     bool isFoodBonusPresent = false;
-    unsigned short foodBonusChance;
+    unsigned short foodBonusChance = 100;
     speed snakeSpeed = spd1;
 
     // Start the game loop
@@ -641,8 +655,8 @@ void gameArcadeMode(sf::RenderWindow& window)
             if (foodBonusChance <= 10 && isFoodBonusPresent == false)
             {
                 foodBonusCountdown = 5;
-                foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
 
+                foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
                 if(snake->checkFoodHitBody(foodBonus))
                 {
                     foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
@@ -692,7 +706,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         }
         if (gameOver == true)
         {
-            arcadeMSC.stop();
+            //arcadeMSC.stop();
             drawGameOver(window, score);
             window.display();
             sf::sleep(sf::seconds(2.f));
@@ -703,7 +717,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         {
             soundEffect.setBuffer(timesUpSB);
             soundEffect.play();
-            arcadeMSC.stop();
+            //arcadeMSC.stop();
             drawGameOver(window, score);
             window.display();
             sf::sleep(sf::seconds(2.f));
@@ -718,7 +732,7 @@ void gameArcadeMode(sf::RenderWindow& window)
 
 void drawPause(sf::RenderWindow& window)
 {
-    defaultFont.loadFromFile("assets/font/ST-SimpleSquare.otf");
+    defaultFont.loadFromFile("assets/font/RenogareSoft-Regular.ttf");
     sf::RectangleShape overlayRect;
     overlayRect.setFillColor(sf::Color(0, 0, 0, 200));
     overlayRect.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
@@ -740,7 +754,7 @@ void drawPause(sf::RenderWindow& window)
 
 void drawGameOver(sf::RenderWindow& window, unsigned int score = 0)
 {
-    defaultFont.loadFromFile("assets/font/ST-SimpleSquare.otf");
+    defaultFont.loadFromFile("assets/font/RenogareSoft-Regular.ttf");
     sf::RectangleShape overlayRect;
     overlayRect.setFillColor(sf::Color(0, 0, 0, 200));
     overlayRect.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));

@@ -105,6 +105,11 @@ void Food::setFoodTexture(sf::Texture& texture)
     rect.setTexture(&texture);
 }
 
+void Food::setFoodColor(sf::Color color)
+{
+    rect.setFillColor(color);
+}
+
 void Food::setRectangle(sf::RectangleShape rect)
 {   
     this->rect = rect;
@@ -200,9 +205,11 @@ void Snake::drawSnake(sf::RenderWindow& window)
     for (unsigned short i = 0; i < snakeSize; i++)
     {
         body[i].nodeRect.setTexture(&bodyTEX);
-        window.draw(body[i].nodeRect);
+        if(!(body[i].nodeRect.getPosition().x == 0 && body[i].nodeRect.getPosition().y == 0))
+        {
+            window.draw(body[i].nodeRect);
+        }
     }
-
     window.draw(head.nodeRect);
 }
 

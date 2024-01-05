@@ -19,6 +19,7 @@ void log(std::string log, bool debugMode);
 void err(std::string err, bool debugMode);
 unsigned short genRandom(unsigned short min,unsigned short max);
 sf::Vector2i GetDesktopResolution(void);
+sf::Color hsv(int hue, float sat, float val);
 
 
 #endif // SYSTEM_HPP_INCLUDED

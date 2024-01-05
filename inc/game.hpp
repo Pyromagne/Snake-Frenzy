@@ -87,6 +87,7 @@ class Food
 
         void generateFood(unsigned short width, unsigned short length, unsigned short xWall = 0, unsigned short yWall = 0);
         void setFoodTexture(sf::Texture& texture);
+        void setFoodColor(sf::Color);
         void setRectangle(sf::RectangleShape rect);
     //end of public
 };
