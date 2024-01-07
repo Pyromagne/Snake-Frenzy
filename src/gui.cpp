@@ -217,7 +217,7 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Texture foodTEX;
     foodTEX.loadFromFile("assets/image/rounded.png");
     food.setFoodTexture(foodTEX);
-    food.rect.setFillColor(color::ONYX);
+    food.rect.setFillColor(sf::Color(0xEF9969ff));
 
 
 
@@ -318,16 +318,17 @@ void gameClassicMode(sf::RenderWindow& window)
                 food.generateFood(wall.width, wall.length, wall.x, wall.y);
                 snake->snakeSize++;
                 log("Food eaten",debugMode);
-                score = score + 10;
 
-                c = c + 10;
+                //for rainbow snake skin
+                //score = score + 10;
+                //c = c + 10;
+
                 for (unsigned int i = 0; i < snake->snakeSize; i++)
-                { 
-                    int cc = c + i * 10; // Increment hue based on the index i
-                    snake->body[i].nodeRect.setFillColor(hsv(cc % 360, 55, 88));
+                {
+                    //int cc = c + i * 10; // Increment hue based on the index i
+                    //snake->body[i].nodeRect.setFillColor(hsv(cc % 360 ,45 , 39));
+                    snake->body[i].nodeRect.setFillColor(sf::Color::White);
                 }
-
-                
 
                 log("Score: " + std::to_string(score),debugMode);
             }
@@ -408,7 +409,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     timerTXT.setFillColor(sf::Color::White);
     timerTXT.setCharacterSize(30.f);
 
-    short countdown = 45;
+    short countdown = 15;
     sf::Clock timerCLK;
 
     short area = (window.getSize().x / snakeSize.x - 1) * window.getSize().y / snakeSize.y;
@@ -449,14 +450,14 @@ void gameArcadeMode(sf::RenderWindow& window)
     {
         foodArray[i].setRectangle(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
         foodArray[i].setFoodTexture(foodTEX);
-        foodArray[i].setFoodColor(hsv(0, 64, 71));
+        foodArray[i].setFoodColor(sf::Color(0xE49969ff));
     }
 
     Food foodBonus(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
     sf::Texture foodBonusTEX;
     foodBonusTEX.loadFromFile("assets/image/rounded.png");
     foodBonus.setFoodTexture(foodBonusTEX);
-    foodBonus.setFoodColor(hsv(50, 80, 96));
+    foodBonus.setFoodColor(sf::Color(0x74A18Eff));
     unsigned short foodBonusCountdown = 5;
     bool isFoodBonusPresent = false;
     unsigned short foodBonusChance = 100;
@@ -577,7 +578,7 @@ void gameArcadeMode(sf::RenderWindow& window)
             timerTXT.setFillColor(sf::Color(255,255,255,75));
             if (countdown <= 10)
             {
-                timerTXT.setFillColor(sf::Color(255,0,0,75));
+                timerTXT.setFillColor(sf::Color(0xC8869175));
             }
 
         }
@@ -586,7 +587,7 @@ void gameArcadeMode(sf::RenderWindow& window)
             timerTXT.setFillColor(sf::Color::White);
             if (countdown <= 10)
             {
-                timerTXT.setFillColor(sf::Color::Red);
+                timerTXT.setFillColor(sf::Color(0xC88691FF));
             }
         }
 
@@ -597,7 +598,7 @@ void gameArcadeMode(sf::RenderWindow& window)
                 timerTXT.setFillColor(sf::Color(255,255,255,75));
                 if (countdown <= 10)
                 {
-                    timerTXT.setFillColor(sf::Color(255,0,0,75));
+                    timerTXT.setFillColor(sf::Color(0xC8869175));
                 }
             }
         }
@@ -606,7 +607,7 @@ void gameArcadeMode(sf::RenderWindow& window)
         {
             if(foodArray[i].rect.getGlobalBounds().intersects(timerTXT.getGlobalBounds()))
             {
-                timerTXT.setFillColor(sf::Color(255,255,255,75));
+                timerTXT.setFillColor(sf::Color(0xC88691FF));
             }
         }
 
