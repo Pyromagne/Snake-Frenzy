@@ -14,8 +14,6 @@ Wall::Wall(int width, int length, sf::RectangleShape sRect) : topRect(sRect), bo
     this->nodeSize.x  = sRect.getSize().x;
     this->nodeSize.y  = sRect.getSize().y;
 
-    //plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x, length * nodeSize.y));
-    //plane.setTextureRect(sf::IntRect(0, 0, width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
     plane = sf::RectangleShape(sf::Vector2f(width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
     
     topRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
@@ -31,7 +29,6 @@ void Wall::setWallPosition(float x, float y)
     this->y = y;
 
     plane.setPosition(x + this->nodeSize.x, y + this->nodeSize.y);
-    //plane.setPosition(x , y);
 
     topRect.setPosition(x, y);
     leftRect.setPosition(x, y);
@@ -57,7 +54,6 @@ void Wall::setWallTexture(sf::Texture& texture)
 
 void Wall::setPlaneColor(sf::Color color)
 {
-    //plane.setColor(color);
     plane.setFillColor(color);
     
 }
@@ -65,7 +61,6 @@ void Wall::setPlaneColor(sf::Color color)
 void Wall::setPlaneTexture(sf::Texture& texture)
 {
     texture.setRepeated(true);
-    //plane.setTexture(texture);
 }
 
 void Wall::drawWall(sf::RenderWindow& window)
@@ -185,11 +180,6 @@ void Snake::dpad(void)
 
 void Snake::drawSnake(sf::RenderWindow& window)
 {
-    /* if (lastMove == null)
-    {
-        head.prevNodes = sf::Vector2f(175.f, 200.f);
-    } */
-
     body[0].nextNodes = &head.prevNodes;
     body[0].nodeRect.setPosition(*body[0].nextNodes);
 

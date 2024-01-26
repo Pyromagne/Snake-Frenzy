@@ -13,5 +13,4 @@ void gameArcadeMode(sf::RenderWindow& window);
 void drawPause(sf::RenderWindow& window);
 void drawGameOver(sf::RenderWindow& window, unsigned int score);
 
-
 #endif // GUI_HPP_INCLUDED

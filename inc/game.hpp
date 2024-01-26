@@ -62,7 +62,6 @@ class Wall
     sf::RectangleShape leftRect;
     sf::RectangleShape rightRect;
 
-    //sf::Sprite plane;
     sf::RectangleShape plane;
 
     void setWallPosition(float x, float y);

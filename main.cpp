@@ -21,7 +21,6 @@ int main(int argc, char* argv[])
     sf::RenderWindow window;
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
-    //defaultFont.loadFromFile("ST-SimpleSquare.otf");
 
      if (argc >= 2)
      {
@@ -61,4 +60,3 @@ int main(int argc, char* argv[])
 }
 
 //memory issue fixed but flow of the game must be improve
-//CHANGE OF PLAN MAKE THE GAME FLAT ART NOT SYNTHWAVE

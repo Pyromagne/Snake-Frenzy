@@ -46,11 +46,6 @@ void mainMenuUI(sf::RenderWindow& window)
     sf::Sprite SFMLLogoSPR;
     SFMLLogoSPR.setTexture(SFMLLogoTEX);
     SFMLLogoSPR.setPosition(sf::Vector2f(window.getSize().x - 75, window.getSize().y - 75));
-    //SFMLLogoSPR.setScale(32.f / SFMLLogoSPR.getLocalBounds().width, 32.f / SFMLLogoSPR.getLocalBounds().height);
-
-    /* sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("assets/image/backgroundSW.png");
-    backgroundTEX.setRepeated(true); */
 
     sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
     backgroundSPR.setFillColor(sf::Color(204, 205, 198));
@@ -64,12 +59,6 @@ void mainMenuUI(sf::RenderWindow& window)
         authorBTN.getButtonStatus(window, event);
     //temporary fix the visual bug in buttons
 
-    /* sf::Music MainMenuBGM;
-    MainMenuBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-07-The-Hidden-One.ogg");
-    MainMenuBGM.setLoop(true);
-    MainMenuBGM.setVolume(30.f);
-    MainMenuBGM.play(); */
-
     sf::SoundBuffer selectHoverSB;
     selectHoverSB.loadFromFile("assets/audio/Retro-Blip-07.wav");
     sf::SoundBuffer selectClickedSB;
@@ -79,10 +68,8 @@ void mainMenuUI(sf::RenderWindow& window)
     soundEffect.setLoop(false);
     soundEffect.setVolume(30.f);
 
-    // Start the game loop
     while (window.isOpen())
     {
-        // Process events
         while (window.pollEvent(event))
         {
             classicModeBTN.getButtonStatus(window, event);
@@ -111,14 +98,12 @@ void mainMenuUI(sf::RenderWindow& window)
             {
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
-                //MainMenuBGM.stop();
                 gameClassicMode(window);
             }
             if (arcadeModeBTN.isPressed)
             {
                 soundEffect.setBuffer(selectClickedSB);
                 soundEffect.play();
-                //MainMenuBGM.stop();
                 gameArcadeMode(window);
             }
             if (authorBTN.isPressed)
@@ -128,11 +113,8 @@ void mainMenuUI(sf::RenderWindow& window)
                 system("start https://pyromagne.itch.io/");
             }
         }
-
-        // Clear screen
         window.clear();
 
-        // Draw the sprite
         window.draw(backgroundSPR);
 
         classicModeBTN.draw(window);
@@ -143,26 +125,17 @@ void mainMenuUI(sf::RenderWindow& window)
         authorBTN.draw(window);
         window.draw(titleTXT);
 
-        // Update the window
         window.display();
     }
 }
 
 void gameClassicMode(sf::RenderWindow& window)
 {
-    int c = 0;
-
     window.setMouseCursorVisible(false);
     unsigned int score = 0;
     bool pause = false;
     bool gameOver = false;
     sf::Clock gameOverCLK;
-
-    /* sf::Music GameClassicBGM;
-    GameClassicBGM.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-09-Lightyear-City.ogg");
-    GameClassicBGM.setLoop(true);
-    GameClassicBGM.setVolume(30.f);
-    GameClassicBGM.play(); */
 
     sf::SoundBuffer foodEatSB;
     foodEatSB.loadFromFile("assets/audio/Retro-Blop-07.wav");
@@ -172,17 +145,8 @@ void gameClassicMode(sf::RenderWindow& window)
     sf::Sound soundEffect;
     soundEffect.setLoop(false);
 
-    /* sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
-    backgroundTEX.setRepeated(true); */
-
     sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
     backgroundSPR.setFillColor(sf::Color(204, 205, 198));
-
-    /*
-    sf::Sprite backgroundSPR(backgroundTEX);
-    backgroundSPR.setTextureRect(sf::IntRect(0, 0, resolution.x, resolution.y));
-    */
 
     sf::Font simpleSquareFNT;
     simpleSquareFNT.loadFromFile("assets/font/RenogareSoft-Regular.ttf");
@@ -200,16 +164,10 @@ void gameClassicMode(sf::RenderWindow& window)
 
     headTEX.loadFromFile("assets/image/rounded.png");
     bodyTEX.loadFromFile("assets/image/rounded.png");
-    //snake->head.nodeRect.setFillColor(sf::Color::Blue);
     snake->setSnakeTexture(headTEX, bodyTEX);
 
     /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
     /* 16:10 */ //Wall wall(window.getSize().x / snakeSize.x, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-
-    //Wall wall(window.getSize().x / snakeSize.x - 5, window.getSize().y / snakeSize.y - 5, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
-    /* sf::Texture wallTEX;
-    wallTEX.loadFromFile("assets/image/wall.png");
-    wall.setWallTexture(wallTEX); */
 
     wall.setWallColor(sf::Color::Transparent);
 
@@ -218,15 +176,9 @@ void gameClassicMode(sf::RenderWindow& window)
     centerY = float((window.getSize().y / 2) - (wall.length / 2) * snakeSize.y);
     wall.setWallPosition(centerX, centerY);
 
-    //wall.setWallPosition(0,0);
-
     snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
     snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
-    /* sf::Texture planeTEX;
-    planeTEX.loadFromFile("assets/image/plane3.png");
-    planeTEX.setRepeated(true);
-    //wall.setPlaneTexture(planeTEX); */
     wall.setPlaneColor(sf::Color(0x555555ff));
 
     Food food(sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
@@ -235,12 +187,8 @@ void gameClassicMode(sf::RenderWindow& window)
     food.setFoodTexture(foodTEX);
     food.rect.setFillColor(sf::Color(0xEF9969ff));
 
-
-
-    // Start the game loop
     while (window.isOpen())
     {
-        // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -267,7 +215,6 @@ void gameClassicMode(sf::RenderWindow& window)
 
         }
 
-
         if(snake->lastMove != 0)
         {
             if(snake->checkSnakeCollision() == true)
@@ -290,11 +237,8 @@ void gameClassicMode(sf::RenderWindow& window)
             }
 
         }
-
-        // Clear screen
         window.clear();
 
-        // Draw the sprite
         window.draw(backgroundSPR);
 
         wall.drawWall(window);
@@ -335,14 +279,10 @@ void gameClassicMode(sf::RenderWindow& window)
                 snake->snakeSize++;
                 log("Food eaten",debugMode);
 
-                //for rainbow snake skin
-                //c = c + 10;
                 score = score + 10;
 
                 for (unsigned int i = 0; i < snake->snakeSize; i++)
                 {
-                    //int cc = c + i * 10; // Increment hue based on the index i
-                    //snake->body[i].nodeRect.setFillColor(hsv(cc % 360 ,45 , 39));
                     snake->body[i].nodeRect.setFillColor(sf::Color::White);
                 }
 
@@ -363,7 +303,6 @@ void gameClassicMode(sf::RenderWindow& window)
         }
         if (gameOver == true)
         {
-            //GameClassicBGM.stop();
             drawGameOver(window, score);
             window.display();
             sf::sleep(sf::seconds(2.f));
@@ -371,7 +310,6 @@ void gameClassicMode(sf::RenderWindow& window)
             mainMenuUI(window);
         }
 
-        // Update the window
         window.display();
     }
 
@@ -384,12 +322,6 @@ void gameArcadeMode(sf::RenderWindow& window)
     bool pause = false;
     bool gameOver = false;
     sf::Clock gameOverCLK;
-
-    /* sf::Music arcadeMSC;
-    arcadeMSC.openFromFile("assets/audio/DavidKBD-Pink-Bloom-Pack-03-To-the-Unknown.ogg");
-    arcadeMSC.setLoop(true);
-    arcadeMSC.setVolume(30.f);
-    arcadeMSC.play(); */
 
     sf::SoundBuffer timesUpSB;
     timesUpSB.loadFromFile("assets/audio/Retro-Charge-Off-11.wav");
@@ -404,10 +336,6 @@ void gameArcadeMode(sf::RenderWindow& window)
 
     sf::Sound soundEffect;
     soundEffect.setLoop(false);
-
-    /* sf::Texture backgroundTEX;
-    backgroundTEX.loadFromFile("assets/image/backgroundGame4.png");
-    backgroundTEX.setRepeated(true); */
 
     sf::RectangleShape backgroundSPR(sf::Vector2f(resolution.x, resolution.y));
     backgroundSPR.setFillColor(sf::Color(204, 205, 198));
@@ -435,7 +363,6 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Texture bodyTEX;
 
     headTEX.loadFromFile("assets/image/rounded.png");
-    //bodyTEX.loadFromFile("assets/image/snakeSkin2.png");
     snake->head.nodeRect.setFillColor(sf::Color::Blue);
     snake->setSnakeTexture(headTEX, headTEX);
 
@@ -451,12 +378,7 @@ void gameArcadeMode(sf::RenderWindow& window)
     snake->head.nodeRect.setPosition(wall.x + 50, wall.y + 50);
     snake->body[0].nodeRect.setPosition(175.f, 200.f);
 
-    /* sf::Texture planeTEX;
-    planeTEX.loadFromFile("assets/image/plane3.png");
-    planeTEX.setRepeated(true); */
-    //wall.setPlaneTexture(planeTEX);
     wall.setPlaneColor(sf::Color(0x555555ff));
-
 
     const unsigned short foodMaxValue = 20;
     Food foodArray[foodMaxValue];
@@ -479,10 +401,8 @@ void gameArcadeMode(sf::RenderWindow& window)
     unsigned short foodBonusChance = 100;
     speed snakeSpeed = spd1;
 
-    // Start the game loop
     while (window.isOpen())
     {
-        // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -540,8 +460,6 @@ void gameArcadeMode(sf::RenderWindow& window)
         break;
         }
 
-
-
         if(snake->lastMove != 0)
         {
             if(snake->checkSnakeCollision() == true)
@@ -574,10 +492,8 @@ void gameArcadeMode(sf::RenderWindow& window)
             }
         }
 
-        // Clear screen
         window.clear();
 
-        // Draw the sprite
         window.draw(backgroundSPR);
 
         wall.drawWall(window);
@@ -629,7 +545,6 @@ void gameArcadeMode(sf::RenderWindow& window)
 
         timerTXT.setPosition(sf::Vector2f((window.getSize().x / 2) - (timerTXT.getLocalBounds().width / 2), 50.f));
         window.draw(timerTXT);
-
 
         /* TEMPORARY PLACE */
             for (unsigned short i = 0; i < foodMaxValue; i++)
@@ -713,8 +628,6 @@ void gameArcadeMode(sf::RenderWindow& window)
                 }
 
             }
-
-
         /* TEMPORARY PLACE */
 
         if(pause == true)
@@ -723,7 +636,6 @@ void gameArcadeMode(sf::RenderWindow& window)
         }
         if (gameOver == true)
         {
-            //arcadeMSC.stop();
             drawGameOver(window, score);
             window.display();
             sf::sleep(sf::seconds(2.f));
@@ -741,8 +653,6 @@ void gameArcadeMode(sf::RenderWindow& window)
             delete snake;
             mainMenuUI(window);
         }
-
-        // Update the window
         window.display();
     }
 }
