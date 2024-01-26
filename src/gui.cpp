@@ -25,15 +25,28 @@ void mainMenuUI(sf::RenderWindow& window)
     arcadeModeBTN.setButtonColor(sf::Color::Transparent);
     arcadeModeBTN.setButtonLabel(40.f, "Arcade");
 
-    RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 500.f));
+    /* RectButton frenzyBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 500.f));
+    frenzyBTN.setLabelColor(color::ONYX, sf::Color::Red, sf::Color::Red);
+    frenzyBTN.setButtonColor(sf::Color::Transparent);
+    frenzyBTN.setButtonLabel(40.f, "Frenzy"); */
+
+    RectButton exitBTN(simpleSquareFNT, true, sf::Vector2f(100.f, 600.f));
     exitBTN.setLabelColor(color::ONYX, sf::Color::Red, sf::Color::Red);
     exitBTN.setButtonColor(sf::Color::Transparent);
     exitBTN.setButtonLabel(40.f, "Exit");
 
-    RectButton authorBTN(simpleSquareFNT, true, sf::Vector2f(window.getSize().x - 275, window.getSize().y - 75));
+    RectButton authorBTN(simpleSquareFNT, true, sf::Vector2f(window.getSize().x - 285, window.getSize().y - 75));
     authorBTN.setLabelColor(sf::Color(0x594D58ff));
     authorBTN.setButtonColor(sf::Color::Transparent);
     authorBTN.setButtonLabel(30.f, "Pyromagne");
+
+    sf::Texture SFMLLogoTEX;
+    SFMLLogoTEX.loadFromFile("assets/sfml.png");
+
+    sf::Sprite SFMLLogoSPR;
+    SFMLLogoSPR.setTexture(SFMLLogoTEX);
+    SFMLLogoSPR.setPosition(sf::Vector2f(window.getSize().x - 75, window.getSize().y - 75));
+    //SFMLLogoSPR.setScale(32.f / SFMLLogoSPR.getLocalBounds().width, 32.f / SFMLLogoSPR.getLocalBounds().height);
 
     /* sf::Texture backgroundTEX;
     backgroundTEX.loadFromFile("assets/image/backgroundSW.png");
@@ -46,6 +59,7 @@ void mainMenuUI(sf::RenderWindow& window)
     //temporary fix the visual bug in buttons
         classicModeBTN.getButtonStatus(window, event);
         arcadeModeBTN.getButtonStatus(window, event);
+        //frenzyBTN.getButtonStatus(window, event);
         exitBTN.getButtonStatus(window, event);
         authorBTN.getButtonStatus(window, event);
     //temporary fix the visual bug in buttons
@@ -123,7 +137,9 @@ void mainMenuUI(sf::RenderWindow& window)
 
         classicModeBTN.draw(window);
         arcadeModeBTN.draw(window);
+        //frenzyBTN.draw(window);
         exitBTN.draw(window);
+        window.draw(SFMLLogoSPR);
         authorBTN.draw(window);
         window.draw(titleTXT);
 
@@ -320,8 +336,8 @@ void gameClassicMode(sf::RenderWindow& window)
                 log("Food eaten",debugMode);
 
                 //for rainbow snake skin
-                //score = score + 10;
                 //c = c + 10;
+                score = score + 10;
 
                 for (unsigned int i = 0; i < snake->snakeSize; i++)
                 {
