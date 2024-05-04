@@ -1,7 +1,3 @@
 .vscode/
-bin/
-obj/
-*.cbp
-*.depend
-*.dll
-*.layout
+
+cmake-build-debug/

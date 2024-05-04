@@ -36,7 +36,7 @@ enum speed
 
 class Node
 {
-    public:
+public:
     Node(); // implement initialization list in the future for nodeRect like in the class Food
     sf::RectangleShape nodeRect = sf::RectangleShape(sf::Vector2f(25, 25));
     sf::Vector2f* nextNodes;
@@ -48,7 +48,7 @@ class Node
 
 class Wall
 {
-    public:
+public:
     Wall(int width, int length, sf::RectangleShape sRect);
 
     unsigned short width;
@@ -73,51 +73,51 @@ class Wall
 };
 
 class Food
-{  
-    public:
+{
+public:
 
-        Food(sf::RectangleShape sRect);
-        Food();
+    Food(sf::RectangleShape sRect);
+    Food();
 
-        sf::Vector2f nodeSize; //
-        unsigned short x = 0;
-        unsigned short y = 0;
-        sf::RectangleShape rect;
+    sf::Vector2f nodeSize; //
+    unsigned short x = 0;
+    unsigned short y = 0;
+    sf::RectangleShape rect;
 
-        void generateFood(unsigned short width, unsigned short length, unsigned short xWall = 0, unsigned short yWall = 0);
-        void setFoodTexture(sf::Texture& texture);
-        void setFoodColor(sf::Color);
-        void setRectangle(sf::RectangleShape rect);
+    void generateFood(unsigned short width, unsigned short length, unsigned short xWall = 0, unsigned short yWall = 0);
+    void setFoodTexture(sf::Texture& texture);
+    void setFoodColor(sf::Color);
+    void setRectangle(sf::RectangleShape rect);
     //end of public
 };
 
 class Snake
 {
-    public:
-        Snake();
-        Snake(unsigned int maxSnake, float nodeSize);
-        Snake(unsigned int maxSnakeSize, unsigned int snakeSize, float nodeSize);
-        ~Snake();
+public:
+    Snake();
+    Snake(unsigned int maxSnake, float nodeSize);
+    Snake(unsigned int maxSnakeSize, unsigned int snakeSize, float nodeSize);
+    ~Snake();
 
-        unsigned int snakeSize = 10;
-        float nodeSize;
-        direction lastMove = null;
-        direction lastMove2 = null;
-        sf::Clock updatePositionCLK;
-        sf::Texture headTEX;
-        sf::Texture bodyTEX;
-        Node head;
-        Node* body = nullptr;
-        //Wall wall = Wall(36,25); /* max value of wall is calculated by dividing resolution by snakeSize */ /* adding wall to the SnakeClass is not final it can be independent object */
+    unsigned int snakeSize = 10;
+    float nodeSize;
+    direction lastMove = null;
+    direction lastMove2 = null;
+    sf::Clock updatePositionCLK;
+    sf::Texture headTEX;
+    sf::Texture bodyTEX;
+    Node head;
+    Node* body = nullptr;
+    //Wall wall = Wall(36,25); /* max value of wall is calculated by dividing resolution by snakeSize */ /* adding wall to the SnakeClass is not final it can be independent object */
 
-        void dpad(void);
-        void drawSnake(sf::RenderWindow& window);
-        void updatePosition(float speed);
-        void setSnakeTexture(sf::Texture& headTEX, sf::Texture& bodyTEX);
-        bool checkSnakeCollision(void);
-        bool checkWallHit(Wall& wall);
-        bool checkFoodCollision(Food& food);
-        bool checkFoodHitBody(Food& food);
+    void dpad(void);
+    void drawSnake(sf::RenderWindow& window);
+    void updatePosition(float speed);
+    void setSnakeTexture(sf::Texture& headTEX, sf::Texture& bodyTEX);
+    bool checkSnakeCollision(void);
+    bool checkWallHit(Wall& wall);
+    bool checkFoodCollision(Food& food);
+    bool checkFoodHitBody(Food& food);
     //end of public
 };
 

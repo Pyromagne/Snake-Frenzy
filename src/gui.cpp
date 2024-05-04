@@ -1,5 +1,5 @@
-#include "../inc/gui.hpp"
-#include "../inc/game.hpp"
+#include "../include/gui.hpp"
+#include "../include/game.hpp"
 
 void mainMenuUI(sf::RenderWindow& window)
 {
@@ -52,11 +52,11 @@ void mainMenuUI(sf::RenderWindow& window)
 
     sf::Event event;
     //temporary fix the visual bug in buttons
-        classicModeBTN.getButtonStatus(window, event);
-        arcadeModeBTN.getButtonStatus(window, event);
-        //frenzyBTN.getButtonStatus(window, event);
-        exitBTN.getButtonStatus(window, event);
-        authorBTN.getButtonStatus(window, event);
+    classicModeBTN.getButtonStatus(window, event);
+    arcadeModeBTN.getButtonStatus(window, event);
+    //frenzyBTN.getButtonStatus(window, event);
+    exitBTN.getButtonStatus(window, event);
+    authorBTN.getButtonStatus(window, event);
     //temporary fix the visual bug in buttons
 
     sf::SoundBuffer selectHoverSB;
@@ -267,32 +267,32 @@ void gameClassicMode(sf::RenderWindow& window)
         window.draw(scoreTXT);
 
         /* TEMPORARY PLACE */
-            if(food.x == 0 && food.y == 0)
-            {
-                food.generateFood(wall.width, wall.length, wall.x, wall.y);
-            }
-            if(snake->checkFoodCollision(food))
-            {
-                soundEffect.setBuffer(foodEatSB);
-                soundEffect.play();
-                food.generateFood(wall.width, wall.length, wall.x, wall.y);
-                snake->snakeSize++;
-                log("Food eaten",debugMode);
+        if(food.x == 0 && food.y == 0)
+        {
+            food.generateFood(wall.width, wall.length, wall.x, wall.y);
+        }
+        if(snake->checkFoodCollision(food))
+        {
+            soundEffect.setBuffer(foodEatSB);
+            soundEffect.play();
+            food.generateFood(wall.width, wall.length, wall.x, wall.y);
+            snake->snakeSize++;
+            log("Food eaten",debugMode);
 
-                score = score + 10;
+            score = score + 10;
 
-                for (unsigned int i = 0; i < snake->snakeSize; i++)
-                {
-                    snake->body[i].nodeRect.setFillColor(sf::Color::White);
-                }
-
-                log("Score: " + std::to_string(score),debugMode);
-            }
-            if(snake->checkFoodHitBody(food))
+            for (unsigned int i = 0; i < snake->snakeSize; i++)
             {
-                food.generateFood(wall.width, wall.length, wall.x, wall.y);
-                log("Food spawned in body position, generate new food",debugMode);
+                snake->body[i].nodeRect.setFillColor(sf::Color::White);
             }
+
+            log("Score: " + std::to_string(score),debugMode);
+        }
+        if(snake->checkFoodHitBody(food))
+        {
+            food.generateFood(wall.width, wall.length, wall.x, wall.y);
+            log("Food spawned in body position, generate new food",debugMode);
+        }
         /* TEMPORARY PLACE */
 
         window.draw(food.rect);
@@ -431,33 +431,33 @@ void gameArcadeMode(sf::RenderWindow& window)
 
         switch (snake->snakeSize)
         {
-        case 20:
-            snakeSpeed = spd2;
-        break;
-        case 30:
-            snakeSpeed = spd3;
-        break;
-        case 40:
-            snakeSpeed = spd4;
-        break;
-        case 50:
-            snakeSpeed = spd5;
-        break;
-        case 60:
-            snakeSpeed = spd6;
-        break;
-        case 70:
-            snakeSpeed = spd7;
-        break;
-        case 80:
-            snakeSpeed = spd8;
-        break;
-        case 90:
-            snakeSpeed = spd9;
-        break;
-        case 100:
-            snakeSpeed = spd10;
-        break;
+            case 20:
+                snakeSpeed = spd2;
+                break;
+            case 30:
+                snakeSpeed = spd3;
+                break;
+            case 40:
+                snakeSpeed = spd4;
+                break;
+            case 50:
+                snakeSpeed = spd5;
+                break;
+            case 60:
+                snakeSpeed = spd6;
+                break;
+            case 70:
+                snakeSpeed = spd7;
+                break;
+            case 80:
+                snakeSpeed = spd8;
+                break;
+            case 90:
+                snakeSpeed = spd9;
+                break;
+            case 100:
+                snakeSpeed = spd10;
+                break;
         }
 
         if(snake->lastMove != 0)
@@ -547,87 +547,87 @@ void gameArcadeMode(sf::RenderWindow& window)
         window.draw(timerTXT);
 
         /* TEMPORARY PLACE */
-            for (unsigned short i = 0; i < foodMaxValue; i++)
+        for (unsigned short i = 0; i < foodMaxValue; i++)
+        {
+            if(foodArray[i].x == 0 && foodArray[i].y == 0)
             {
-                if(foodArray[i].x == 0 && foodArray[i].y == 0)
-                {
-                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
-                }
-                if(snake->checkFoodCollision(foodArray[i]))
-                {
-                    soundEffect.setBuffer(foodEatSB);
-                    soundEffect.play();
-                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
-                    snake->snakeSize++;
-                    score = score + 10;
-                    countdown = countdown + 1;
-
-                    if (isFoodBonusPresent == false)
-                    {
-                        foodBonusChance = genRandom(1,100);
-                        log(std::to_string(foodBonusChance), debugMode);
-                    }
-
-                }
-                if(snake->checkFoodHitBody(foodArray[i]))
-                {
-                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
-                }
-                for (unsigned short j = i + 1; j < foodMaxValue; j++)
-                {
-                    if (foodArray[i].x == foodArray[j].x && foodArray[i].y == foodArray[j].y)
-                    {
-                        foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
-                    }
-                }
-
-                window.draw(foodArray[i].rect);
+                foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
             }
-
-            if (foodBonusChance <= 10 && isFoodBonusPresent == false)
+            if(snake->checkFoodCollision(foodArray[i]))
             {
-                foodBonusCountdown = 5;
-
-                foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
-                if(snake->checkFoodHitBody(foodBonus))
-                {
-                    foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
-                }
-                for (unsigned short i = 0; i < foodMaxValue; i++)
-                {
-                    if (foodBonus.x == foodArray[i].x && foodBonus.y == foodArray[i].y)
-                    {
-                        foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
-                    }
-                }
-
-                soundEffect.setBuffer(foodBonusSB);
+                soundEffect.setBuffer(foodEatSB);
                 soundEffect.play();
-                isFoodBonusPresent = true;
-            }
+                foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+                snake->snakeSize++;
+                score = score + 10;
+                countdown = countdown + 1;
 
-            if (isFoodBonusPresent)
-            {
-                window.draw(foodBonus.rect);
-                if(snake->checkFoodCollision(foodBonus))
+                if (isFoodBonusPresent == false)
                 {
-                    isFoodBonusPresent = false;
-                    foodBonus.rect.setPosition(0.f,0.f);
-                    soundEffect.setBuffer(foodEatSB);
-                    soundEffect.play();
-                    score = score + 100;
-                    countdown = countdown + 3;
                     foodBonusChance = genRandom(1,100);
                     log(std::to_string(foodBonusChance), debugMode);
                 }
-                if (foodBonusCountdown == 0)
-                {
-                    isFoodBonusPresent = false;
-                    foodBonus.rect.setPosition(0.f,0.f);
-                    foodBonusChance = genRandom(1,100);
-                }
 
             }
+            if(snake->checkFoodHitBody(foodArray[i]))
+            {
+                foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+            }
+            for (unsigned short j = i + 1; j < foodMaxValue; j++)
+            {
+                if (foodArray[i].x == foodArray[j].x && foodArray[i].y == foodArray[j].y)
+                {
+                    foodArray[i].generateFood(wall.width, wall.length, wall.x, wall.y);
+                }
+            }
+
+            window.draw(foodArray[i].rect);
+        }
+
+        if (foodBonusChance <= 10 && isFoodBonusPresent == false)
+        {
+            foodBonusCountdown = 5;
+
+            foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
+            if(snake->checkFoodHitBody(foodBonus))
+            {
+                foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
+            }
+            for (unsigned short i = 0; i < foodMaxValue; i++)
+            {
+                if (foodBonus.x == foodArray[i].x && foodBonus.y == foodArray[i].y)
+                {
+                    foodBonus.generateFood(wall.width, wall.length, wall.x, wall.y);
+                }
+            }
+
+            soundEffect.setBuffer(foodBonusSB);
+            soundEffect.play();
+            isFoodBonusPresent = true;
+        }
+
+        if (isFoodBonusPresent)
+        {
+            window.draw(foodBonus.rect);
+            if(snake->checkFoodCollision(foodBonus))
+            {
+                isFoodBonusPresent = false;
+                foodBonus.rect.setPosition(0.f,0.f);
+                soundEffect.setBuffer(foodEatSB);
+                soundEffect.play();
+                score = score + 100;
+                countdown = countdown + 3;
+                foodBonusChance = genRandom(1,100);
+                log(std::to_string(foodBonusChance), debugMode);
+            }
+            if (foodBonusCountdown == 0)
+            {
+                isFoodBonusPresent = false;
+                foodBonus.rect.setPosition(0.f,0.f);
+                foodBonusChance = genRandom(1,100);
+            }
+
+        }
         /* TEMPORARY PLACE */
 
         if(pause == true)
@@ -671,8 +671,8 @@ void drawPause(sf::RenderWindow& window)
     pauseTXT.setCharacterSize(50.f);
 
     pauseTXT.setPosition(sf::Vector2f(
-        (window.getSize().x / 2) - (pauseTXT.getLocalBounds().width / 2),
-        (window.getSize().y / 2) - (pauseTXT.getLocalBounds().height / 2)
+            (window.getSize().x / 2) - (pauseTXT.getLocalBounds().width / 2),
+            (window.getSize().y / 2) - (pauseTXT.getLocalBounds().height / 2)
     ));
 
     window.draw(overlayRect);
@@ -692,8 +692,8 @@ void drawGameOver(sf::RenderWindow& window, unsigned int score = 0)
     gameOverTXT.setString("Game Over");
     gameOverTXT.setCharacterSize(100.f);
     gameOverTXT.setPosition(sf::Vector2f(
-        (window.getSize().x / 2) - (gameOverTXT.getLocalBounds().width / 2),
-        (window.getSize().y / 2) - (gameOverTXT.getLocalBounds().height / 2)
+            (window.getSize().x / 2) - (gameOverTXT.getLocalBounds().width / 2),
+            (window.getSize().y / 2) - (gameOverTXT.getLocalBounds().height / 2)
     ));
 
     sf::Text scoreTXT;
@@ -702,8 +702,8 @@ void drawGameOver(sf::RenderWindow& window, unsigned int score = 0)
     scoreTXT.setString("Score: " + std::to_string(score));
     scoreTXT.setCharacterSize(50.f);
     scoreTXT.setPosition(sf::Vector2f(
-        (window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2),
-        (window.getSize().y / 2) - (scoreTXT.getLocalBounds().height / 2) + 100
+            (window.getSize().x / 2) - (scoreTXT.getLocalBounds().width / 2),
+            (window.getSize().y / 2) - (scoreTXT.getLocalBounds().height / 2) + 100
     ));
 
 

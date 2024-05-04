@@ -2,7 +2,7 @@
 #define GUI_HPP_INCLUDED
 
 #include <SFML/Graphics.hpp>
-#include "sfmlbutton.hpp"
+#include "../sfmlButton/include/sfmlButton.hpp"
 #include "system.hpp"
 #include "game.hpp"
 

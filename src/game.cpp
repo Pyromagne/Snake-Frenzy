@@ -1,5 +1,5 @@
-#include "../inc/game.hpp"
-#include "../inc/system.hpp"
+#include "../include/game.hpp"
+#include "../include/system.hpp"
 
 
 Node::Node()
@@ -15,7 +15,7 @@ Wall::Wall(int width, int length, sf::RectangleShape sRect) : topRect(sRect), bo
     this->nodeSize.y  = sRect.getSize().y;
 
     plane = sf::RectangleShape(sf::Vector2f(width * nodeSize.x - (nodeSize.x*2), length * nodeSize.y - (nodeSize.y*2)));
-    
+
     topRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
     leftRect = sf::RectangleShape(sf::Vector2f(nodeSize.x, float(length * nodeSize.y)));
     bottomRect = sf::RectangleShape(sf::Vector2f(float(width * nodeSize.x), nodeSize.y));
@@ -55,7 +55,7 @@ void Wall::setWallTexture(sf::Texture& texture)
 void Wall::setPlaneColor(sf::Color color)
 {
     plane.setFillColor(color);
-    
+
 }
 
 void Wall::setPlaneTexture(sf::Texture& texture)
@@ -106,7 +106,7 @@ void Food::setFoodColor(sf::Color color)
 }
 
 void Food::setRectangle(sf::RectangleShape rect)
-{   
+{
     this->rect = rect;
     nodeSize.x = rect.getSize().x;
     nodeSize.y = rect.getSize().y;
