@@ -363,7 +363,6 @@ void gameArcadeMode(sf::RenderWindow& window)
     sf::Texture bodyTEX;
 
     headTEX.loadFromFile("assets/image/rounded.png");
-    snake->head.nodeRect.setFillColor(sf::Color::Blue);
     snake->setSnakeTexture(headTEX, headTEX);
 
     /* 16:9 */ Wall wall(window.getSize().x / snakeSize.x - 1, window.getSize().y / snakeSize.y, sf::RectangleShape(sf::Vector2f(25.f, 25.f)));
